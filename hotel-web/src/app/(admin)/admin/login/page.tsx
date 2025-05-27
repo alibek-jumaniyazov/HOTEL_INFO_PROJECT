@@ -1,0 +1,138 @@
+"use client"
+
+import type React from "react"
+
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Lock, User, Eye, EyeOff, Home } from "lucide-react"
+import Link from "next/link"
+
+export default function AdminLogin() {
+  const [credentials, setCredentials] = useState({
+    username: "",
+    password: "",
+  })
+  const [showPassword, setShowPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+  const router = useRouter()
+
+  // Check if already logged in
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isAuthenticated = document.cookie.includes("admin-token=authenticated")
+      if (isAuthenticated) {
+        router.replace("/admin/dashboard")
+      }
+    }
+  }, [router])
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setError("")
+
+    // Simple authentication (in real app, use proper authentication)
+    if (credentials.username === "admin" && credentials.password === "admin123") {
+      // Set cookie and redirect
+      document.cookie = "admin-token=authenticated; path=/; max-age=86400"
+      router.push("/admin/dashboard")
+    } else {
+      setError("Noto'g'ri login yoki parol")
+    }
+
+    setIsLoading(false)
+  }
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900">
+      <div className="absolute inset-0 bg-black/20"></div>
+
+      {/* Back to site button */}
+      <Link href="/" className="absolute top-4 left-4 z-20">
+        <Button variant="ghost" className="text-white hover:bg-white/20">
+          <Home className="w-4 h-4 mr-2" />
+          Saytga qaytish
+        </Button>
+      </Link>
+
+      <Card className="w-full max-w-md mx-4 relative z-10 shadow-2xl">
+        <CardHeader className="text-center pb-8">
+          <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Lock className="w-8 h-8 text-white" />
+          </div>
+          <CardTitle className="text-2xl font-bold text-gray-900">Admin Panel</CardTitle>
+          <p className="text-gray-600">Luxury Hotel boshqaruv tizimi</p>
+        </CardHeader>
+
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">{error}</div>
+            )}
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Foydalanuvchi nomi</label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Input
+                  type="text"
+                  value={credentials.username}
+                  onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+                  placeholder="admin"
+                  className="pl-10"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Parol</label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  value={credentials.password}
+                  onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+                  placeholder="••••••••"
+                  className="pl-10 pr-10"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+            </div>
+
+            <Button type="submit" disabled={isLoading} className="w-full bg-blue-600 hover:bg-blue-700 py-3">
+              {isLoading ? "Kirish..." : "Kirish"}
+            </Button>
+          </form>
+
+          <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+            <p className="text-sm text-blue-800">
+              <strong>Demo ma'lumotlar:</strong>
+              <br />
+              Login: admin
+              <br />
+              Parol: admin123
+            </p>
+          </div>
+
+          <div className="mt-4 text-center">
+            <Link href="/" className="text-sm text-gray-600 hover:text-blue-600">
+              Asosiy saytga qaytish
+            </Link>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
+}
