@@ -4,11 +4,12 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { LayoutDashboard, Building, Bed, ChevronLeft, ChevronRight } from "lucide-react"
+import { LayoutDashboard, Building, Bed, ChevronLeft, ChevronRight, Tag } from "lucide-react"
 
 const navigation = [
   { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { name: "Hotel Ma'lumotlari", href: "/admin/hotel", icon: Building },
+  { name: "Kategoriyalar", href: "/admin/categories", icon: Tag },
   { name: "Xonalar", href: "/admin/rooms", icon: Bed },
 ]
 
@@ -28,7 +29,7 @@ export default function AdminSidebar() {
           <div className="h-8 bg-gray-200 rounded animate-pulse"></div>
         </div>
         <div className="p-4 space-y-2">
-          {[...Array(3)].map((_, i) => (
+          {[...Array(4)].map((_, i) => (
             <div key={i} className="h-10 bg-gray-200 rounded animate-pulse"></div>
           ))}
         </div>

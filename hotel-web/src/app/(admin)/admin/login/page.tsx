@@ -1,18 +1,20 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Lock, User, Eye, EyeOff, Home } from "lucide-react"
+import { Lock, User, Eye, EyeOff, Home, Loader2 } from "lucide-react"
 import Link from "next/link"
+import { AuthAPI, type LoginCredentials } from "@/lib/api"
+
+const API_BASE_URL = "http://localhost:3001/api"
 
 export default function AdminLogin() {
-  const [credentials, setCredentials] = useState({
-    username: "",
+  const [credentials, setCredentials] = useState<LoginCredentials>({
+    name: "",
     password: "",
   })
   const [showPassword, setShowPassword] = useState(false)
@@ -23,7 +25,7 @@ export default function AdminLogin() {
   // Check if already logged in
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const isAuthenticated = document.cookie.includes("admin-token=authenticated")
+      const isAuthenticated = AuthAPI.isAuthenticated()
       if (isAuthenticated) {
         router.replace("/admin/dashboard")
       }
@@ -35,16 +37,19 @@ export default function AdminLogin() {
     setIsLoading(true)
     setError("")
 
-    // Simple authentication (in real app, use proper authentication)
-    if (credentials.username === "admin" && credentials.password === "admin123") {
-      // Set cookie and redirect
-      document.cookie = "admin-token=authenticated; path=/; max-age=86400"
-      router.push("/admin/dashboard")
-    } else {
-      setError("Noto'g'ri login yoki parol")
-    }
+    try {
+      const response = await AuthAPI.login(credentials)
 
-    setIsLoading(false)
+      if (response.success) {
+        router.push("/admin/dashboard")
+      } else {
+        setError(response.error || "Login jarayonida xatolik yuz berdi")
+      }
+    } catch (error) {
+      setError("Serverga ulanishda xatolik yuz berdi")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -75,16 +80,17 @@ export default function AdminLogin() {
             )}
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">Foydalanuvchi nomi</label>
+              <label className="text-sm font-medium text-gray-700">Ism</label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <Input
                   type="text"
-                  value={credentials.username}
-                  onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
-                  placeholder="admin"
+                  value={credentials.name}
+                  onChange={(e) => setCredentials({ ...credentials, name: e.target.value })}
+                  placeholder="Ismingizni kiriting"
                   className="pl-10"
                   required
+                  disabled={isLoading}
                 />
               </div>
             </div>
@@ -100,11 +106,13 @@ export default function AdminLogin() {
                   placeholder="••••••••"
                   className="pl-10 pr-10"
                   required
+                  disabled={isLoading}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  disabled={isLoading}
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -112,7 +120,14 @@ export default function AdminLogin() {
             </div>
 
             <Button type="submit" disabled={isLoading} className="w-full bg-blue-600 hover:bg-blue-700 py-3">
-              {isLoading ? "Kirish..." : "Kirish"}
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Kirish...
+                </>
+              ) : (
+                "Kirish"
+              )}
             </Button>
           </form>
 
@@ -120,9 +135,14 @@ export default function AdminLogin() {
             <p className="text-sm text-blue-800">
               <strong>Demo ma'lumotlar:</strong>
               <br />
-              Login: admin
+              Ism: alibek
               <br />
-              Parol: admin123
+              Parol: alibek
+              <br />
+              <br />
+              <strong>Backend API:</strong>
+              <br />
+              {API_BASE_URL}/admin/login
             </p>
           </div>
 

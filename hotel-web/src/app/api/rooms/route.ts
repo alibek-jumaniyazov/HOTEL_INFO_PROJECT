@@ -11,7 +11,7 @@ const rooms = [
     features: ["Bepul WiFi", "Konditsioner", "TV", "Mini bar"],
     amenities: ["wifi", "tv", "coffee", "bath"],
     status: "available",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "",
     description: "Zamonaviy va qulay standart xona",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -25,7 +25,7 @@ const rooms = [
     features: ["Bepul WiFi", "Balkon", "Jacuzzi", "Room service"],
     amenities: ["wifi", "tv", "coffee", "bath"],
     status: "occupied",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "",
     description: "Keng va hashamatli deluxe xona",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
@@ -39,68 +39,114 @@ const rooms = [
     features: ["VIP xizmat", "Alohida yashash xonasi", "Panorama ko'rinish", "Butler xizmati"],
     amenities: ["wifi", "tv", "coffee", "bath", "car"],
     status: "available",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "",
     description: "Eng yuqori darajadagi suite xona",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
 ]
 
-// GET - Barcha xonalarni olish
-export async function GET() {
+// GET - Bitta xonani olish
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const roomId = Number.parseInt(params.id)
+    const room = rooms.find((r) => r.id === roomId)
+
+    if (!room) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Xona topilmadi",
+        },
+        { status: 404 },
+      )
+    }
+
     return NextResponse.json({
       success: true,
-      data: rooms,
-      total: rooms.length,
+      data: room,
     })
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        error: "Xonalarni olishda xatolik",
+        error: "Xonani olishda xatolik",
       },
       { status: 500 },
     )
   }
 }
 
-// POST - Yangi xona qo'shish
-export async function POST(request: NextRequest) {
+// PUT - Xonani yangilash
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
+    const roomId = Number.parseInt(params.id)
     const body = await request.json()
 
-    // Validate required fields
-    if (!body.name || !body.price || !body.capacity || !body.size) {
+    const roomIndex = rooms.findIndex((r) => r.id === roomId)
+
+    if (roomIndex === -1) {
       return NextResponse.json(
         {
           success: false,
-          error: "Majburiy maydonlar to'ldirilmagan",
+          error: "Xona topilmadi",
         },
-        { status: 400 },
+        { status: 404 },
       )
     }
 
-    // Create new room
-    const newRoom = {
-      id: Math.max(...rooms.map((r) => r.id)) + 1,
+    // Update room
+    rooms[roomIndex] = {
+      ...rooms[roomIndex],
       ...body,
-      createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }
 
-    rooms.push(newRoom)
-
     return NextResponse.json({
       success: true,
-      data: newRoom,
-      message: "Yangi xona muvaffaqiyatli qo'shildi",
+      data: rooms[roomIndex],
+      message: "Xona muvaffaqiyatli yangilandi",
     })
   } catch (error) {
     return NextResponse.json(
       {
         success: false,
-        error: "Xona qo'shishda xatolik",
+        error: "Xonani yangilashda xatolik",
+      },
+      { status: 500 },
+    )
+  }
+}
+
+// DELETE - Xonani o'chirish
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    const roomId = Number.parseInt(params.id)
+    const roomIndex = rooms.findIndex((r) => r.id === roomId)
+
+    if (roomIndex === -1) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Xona topilmadi",
+        },
+        { status: 404 },
+      )
+    }
+
+    // Remove room
+    const deletedRoom = rooms.splice(roomIndex, 1)[0]
+
+    return NextResponse.json({
+      success: true,
+      data: deletedRoom,
+      message: "Xona muvaffaqiyatli o'chirildi",
+    })
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Xonani o'chirishda xatolik",
       },
       { status: 500 },
     )

@@ -1,23 +1,57 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { CheckCircle, Users, Calendar, Award } from "lucide-react"
+import SimpleImage from "@/components/ui/simple-image"
 
 export default function HotelInfo() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const scrollToContact = () => {
+    if (typeof window !== "undefined") {
+      document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
   const features = [
     "Toshkent markazida qulay joylashuv",
-    "5 ta zamonaviy xona va suite",
+    "150 ta zamonaviy xona va suite",
     "24/7 xona xizmati",
     "Bepul WiFi barcha hududlarda",
+    "Fitnes markaz va spa",
+    "Biznes markaz va konferens zallari",
+    "Restoran va bar",
     "Bepul parking",
   ]
 
   const stats = [
-    { icon: Users, number: "500+", label: "Mamnun mijozlar" },
-    { icon: Calendar, number: "2+", label: "Yillik tajriba" },
-    // { icon: Award, number: "25+", label: "Mukofotlar" },
+    { icon: Users, number: "10,000+", label: "Mamnun mijozlar" },
+    { icon: Calendar, number: "15+", label: "Yillik tajriba" },
+    { icon: Award, number: "25+", label: "Mukofotlar" },
   ]
+
+  if (!mounted) {
+    return (
+      <section className="py-20 bg-gray-50">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-8">
+              <div className="h-8 bg-gray-200 rounded animate-pulse"></div>
+              <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+              <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
+            </div>
+            <div className="h-96 bg-gray-200 rounded animate-pulse"></div>
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section id="about" className="py-20 bg-gray-50">
@@ -48,7 +82,7 @@ export default function HotelInfo() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-2 gap-6 pt-8 border-t border-gray-200">
+            <div className="grid grid-cols-3 gap-6 pt-8 border-t border-gray-200">
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
                   <stat.icon className="w-8 h-8 text-blue-600 mx-auto mb-2" />
@@ -58,11 +92,7 @@ export default function HotelInfo() {
               ))}
             </div>
 
-            <Button
-              size="lg"
-              className="bg-blue-600 hover:bg-blue-700"
-              onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
-            >
+            <Button size="lg" className="bg-blue-600 hover:bg-blue-700" onClick={scrollToContact}>
               Aloqa uchun
             </Button>
           </div>
@@ -70,15 +100,24 @@ export default function HotelInfo() {
           {/* Right side - Hotel image */}
           <div className="relative">
             <div className="relative overflow-hidden rounded-2xl shadow-2xl">
-              <img
-                src="/placeholder.svg?height=600&width=500"
-                alt="Luxury Hotel"
-                className="w-full h-[600px] object-cover"
-              />
+              <SimpleImage src="/images/hotel-exterior.jpg" alt="Luxury Hotel" className="w-full h-[600px]" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
             </div>
 
-           
+            {/* Floating card */}
+            <Card className="absolute -bottom-6 -left-6 bg-white shadow-xl">
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+                    <Award className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <div className="font-bold text-gray-900">5 yulduzli</div>
+                    <div className="text-sm text-gray-600">Sertifikatlangan hotel</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>

@@ -10,7 +10,7 @@ let hotelData = {
   phone: "+998 90 123 45 67",
   email: "info@luxuryhotel.uz",
   features: ["Bepul WiFi", "Parking", "Restaurant", "Fitnes zal", "Spa", "Biznes markaz"],
-  image: "/placeholder.svg?height=600&width=800",
+  image: "",
   rating: 5.0,
   totalRooms: 150,
   createdAt: new Date().toISOString(),

@@ -8,19 +8,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { X, Save, Loader2, Plus } from "lucide-react"
-
-interface Room {
-  id?: number
-  name: string
-  price: number
-  capacity: number
-  size: number
-  features: string[]
-  amenities: string[]
-  status: string
-  image: string
-  description: string
-}
+import { RoomsAPI, CategoriesAPI, type Room, type CreateRoomData, type Category, type RoomImage } from "@/lib/api"
+import ImageUpload from "./image-upload"
 
 interface RoomFormProps {
   room?: Room | null
@@ -28,79 +17,151 @@ interface RoomFormProps {
 }
 
 export default function RoomForm({ room, onClose }: RoomFormProps) {
-  const [formData, setFormData] = useState<Room>({
-    name: "",
-    price: 0,
-    capacity: 1,
-    size: 0,
-    features: [],
-    amenities: ["wifi", "tv", "coffee", "bath"],
-    status: "available",
-    image: "/placeholder.svg?height=300&width=400",
+  const [formData, setFormData] = useState<CreateRoomData>({
+    title: "",
     description: "",
+    price: "",
+    categoryId: 0,
+    amenities: [],
+    files: [],
   })
+  const [categories, setCategories] = useState<Category[]>([])
   const [isSaving, setIsSaving] = useState(false)
-  const [newFeature, setNewFeature] = useState("")
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true)
+  const [newAmenity, setNewAmenity] = useState("")
+  const [error, setError] = useState("")
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
+  const [existingImages, setExistingImages] = useState<RoomImage[]>([])
+  const [imagesToDelete, setImagesToDelete] = useState<number[]>([])
 
   useEffect(() => {
+    loadCategories()
     if (room) {
-      setFormData(room)
+      setFormData({
+        title: room.title,
+        description: room.description,
+        price: room.price,
+        categoryId: room.categoryId,
+        amenities: [...room.amenities],
+        files: [],
+      })
+      if (room.images && room.images.length > 0) {
+        setExistingImages(room.images)
+      }
     }
   }, [room])
+
+  const loadCategories = async () => {
+    setIsLoadingCategories(true)
+    try {
+      const response = await CategoriesAPI.getAllCategories()
+      if (response.success && response.data) {
+        setCategories(response.data)
+        if (!room && response.data.length > 0) {
+          setFormData((prev) => ({ ...prev, categoryId: response.data[0].id }))
+        }
+      }
+    } catch (error) {
+      console.error("Failed to load categories:", error)
+    } finally {
+      setIsLoadingCategories(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSaving(true)
+    setError("")
+
+    // Validation
+    if (!formData.title.trim()) {
+      setError("Xona nomi majburiy")
+      setIsSaving(false)
+      return
+    }
+
+    if (!formData.price.trim()) {
+      setError("Narx majburiy")
+      setIsSaving(false)
+      return
+    }
+
+    if (formData.categoryId === 0) {
+      setError("Kategoriya tanlash majburiy")
+      setIsSaving(false)
+      return
+    }
 
     try {
-      const url = room ? `/api/rooms/${room.id}` : "/api/rooms"
-      const method = room ? "PUT" : "POST"
+      let response
 
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      })
+      // Add selected files to formData
+      const dataToSend = {
+        ...formData,
+        files: selectedFiles,
+      }
 
-      const result = await response.json()
+      if (room) {
+        // If updating, add images to delete
+        response = await RoomsAPI.updateRoom(room.id, {
+          ...dataToSend,
+          deleteImages: imagesToDelete.length > 0 ? imagesToDelete : undefined,
+        })
+      } else {
+        response = await RoomsAPI.createRoom(dataToSend)
+      }
 
-      if (result.success) {
+      if (response.success) {
         alert(room ? "Xona muvaffaqiyatli yangilandi!" : "Yangi xona muvaffaqiyatli qo'shildi!")
         onClose()
       } else {
-        alert("Xatolik: " + result.error)
+        setError(response.error || "Ma'lumotlarni saqlashda xatolik")
       }
     } catch (error) {
-      alert("Ma'lumotlarni saqlashda xatolik")
+      setError("Serverga ulanishda xatolik")
     } finally {
       setIsSaving(false)
     }
   }
 
-  const addFeature = () => {
-    if (newFeature.trim() && !formData.features.includes(newFeature.trim())) {
+  const addAmenity = () => {
+    if (newAmenity.trim() && !formData.amenities.includes(newAmenity.trim())) {
       setFormData({
         ...formData,
-        features: [...formData.features, newFeature.trim()],
+        amenities: [...formData.amenities, newAmenity.trim()],
       })
-      setNewFeature("")
+      setNewAmenity("")
     }
   }
 
-  const removeFeature = (featureToRemove: string) => {
+  const removeAmenity = (amenityToRemove: string) => {
     setFormData({
       ...formData,
-      features: formData.features.filter((feature) => feature !== featureToRemove),
+      amenities: formData.amenities.filter((amenity) => amenity !== amenityToRemove),
     })
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault()
+      addAmenity()
+    }
+  }
+
+  const handleFilesChange = (files: File[]) => {
+    setSelectedFiles(files)
+  }
+
+  const handleRemoveExistingImage = (imageId: number) => {
+    setExistingImages((prev) => prev.filter((img) => img.id !== imageId))
+    setImagesToDelete((prev) => [...prev, imageId])
   }
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <Card className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>{room ? "Xonani Tahrirlash" : "Yangi Xona Qo'shish"}</CardTitle>
+          <CardTitle className="text-xl">{room ? "Xonani Tahrirlash" : "Yangi Xona Qo'shish"}</CardTitle>
           <Button variant="ghost" size="icon" onClick={onClose}>
             <X className="w-4 h-4" />
           </Button>
@@ -108,116 +169,124 @@ export default function RoomForm({ room, onClose }: RoomFormProps) {
 
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">{error}</div>
+            )}
+
+            {/* Basic Information */}
             <div className="grid md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Xona Nomi *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Xona Nomi <span className="text-red-500">*</span>
+                </label>
                 <Input
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Xona nomi"
+                  value={formData.title}
+                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  placeholder="Masalan: Deluxe Suite"
                   required
+                  disabled={isSaving}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Narx (so'm/kecha) *</label>
-                <Input
-                  type="number"
-                  value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: Number.parseInt(e.target.value) || 0 })}
-                  placeholder="Narx"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Sig'im (kishi) *</label>
-                <Input
-                  type="number"
-                  value={formData.capacity}
-                  onChange={(e) => setFormData({ ...formData, capacity: Number.parseInt(e.target.value) || 1 })}
-                  placeholder="Sig'im"
-                  min="1"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Maydon (m²) *</label>
-                <Input
-                  type="number"
-                  value={formData.size}
-                  onChange={(e) => setFormData({ ...formData, size: Number.parseInt(e.target.value) || 0 })}
-                  placeholder="Maydon"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Holat</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Kategoriya <span className="text-red-500">*</span>
+                </label>
                 <select
-                  value={formData.status}
-                  onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                  value={formData.categoryId}
+                  onChange={(e) => setFormData({ ...formData, categoryId: Number.parseInt(e.target.value) })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  required
+                  disabled={isSaving || isLoadingCategories}
                 >
-                  <option value="available">Bo'sh</option>
-                  <option value="occupied">Band</option>
-                  <option value="maintenance">Ta'mirlash</option>
+                  <option value={0}>Kategoriya tanlang</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
                 </select>
+                {isLoadingCategories && <p className="text-xs text-gray-500 mt-1">Kategoriyalar yuklanmoqda...</p>}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Rasm URL</label>
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Narx (so'm/kecha) <span className="text-red-500">*</span>
+                </label>
                 <Input
-                  value={formData.image}
-                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  placeholder="Rasm URL"
+                  value={formData.price}
+                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                  placeholder="Masalan: 150,000"
+                  required
+                  disabled={isSaving}
                 />
+                <p className="text-xs text-gray-500 mt-1">Faqat raqam va vergul ishlatishingiz mumkin</p>
               </div>
             </div>
 
+            {/* Description */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Tavsif</label>
               <Textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Xona haqida qisqacha ma'lumot"
-                rows={3}
+                placeholder="Xona haqida batafsil ma'lumot..."
+                rows={4}
+                disabled={isSaving}
               />
             </div>
 
+            {/* Amenities */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Xususiyatlar</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Qulayliklar</label>
               <div className="flex space-x-2 mb-3">
                 <Input
-                  value={newFeature}
-                  onChange={(e) => setNewFeature(e.target.value)}
-                  placeholder="Yangi xususiyat qo'shish"
-                  onKeyPress={(e) => e.key === "Enter" && (e.preventDefault(), addFeature())}
+                  value={newAmenity}
+                  onChange={(e) => setNewAmenity(e.target.value)}
+                  placeholder="Yangi qulaylik qo'shish"
+                  onKeyPress={handleKeyPress}
+                  disabled={isSaving}
                 />
-                <Button type="button" onClick={addFeature} size="icon" variant="outline">
+                <Button type="button" onClick={addAmenity} size="icon" variant="outline" disabled={isSaving}>
                   <Plus className="w-4 h-4" />
                 </Button>
               </div>
               <div className="flex flex-wrap gap-2">
-                {formData.features.map((feature, index) => (
+                {formData.amenities.map((amenity, index) => (
                   <Badge
                     key={index}
                     variant="secondary"
-                    className="cursor-pointer"
-                    onClick={() => removeFeature(feature)}
+                    className="cursor-pointer hover:bg-red-100"
+                    onClick={() => !isSaving && removeAmenity(amenity)}
                   >
-                    {feature} <X className="w-3 h-3 ml-1" />
+                    {amenity} <X className="w-3 h-3 ml-1" />
                   </Badge>
                 ))}
               </div>
+              {formData.amenities.length === 0 && (
+                <p className="text-xs text-gray-500 mt-1">WiFi, TV, Konditsioner kabi qulayliklarni qo'shing</p>
+              )}
             </div>
 
-            <div className="flex justify-end space-x-4">
-              <Button variant="outline" type="button" onClick={onClose}>
+            {/* Image Upload Section */}
+            <ImageUpload
+              selectedFiles={selectedFiles}
+              onFilesChange={handleFilesChange}
+              existingImages={existingImages}
+              onRemoveExisting={handleRemoveExistingImage}
+              disabled={isSaving}
+            />
+
+            {/* Form Actions */}
+            <div className="flex justify-end space-x-4 pt-4 border-t">
+              <Button variant="outline" type="button" onClick={onClose} disabled={isSaving}>
                 Bekor qilish
               </Button>
-              <Button type="submit" disabled={isSaving} className="bg-blue-600 hover:bg-blue-700">
+              <Button
+                type="submit"
+                disabled={isSaving || formData.categoryId === 0}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
                 {isSaving ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />

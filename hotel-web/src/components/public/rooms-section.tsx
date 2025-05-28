@@ -1,167 +1,205 @@
-"use client";
+"use client"
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Users, Wifi, Coffee, Tv, Bath, Car } from "lucide-react";
+import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Loader2, RefreshCw, ImageIcon } from "lucide-react"
+import SimpleImage from "@/components/ui/simple-image"
+import { RoomsAPI, type Room } from "@/lib/api"
 
 export default function RoomsSection() {
-  const rooms = [
-    {
-      id: 1,
-      name: "Standart xona",
-      price: "150,000",
-      image: "/placeholder.svg?height=300&width=400",
-      capacity: "2 kishi",
-      size: "25 m²",
-      features: ["Bepul WiFi", "Konditsioner", "TV", "Mini bar"],
-      amenities: [Wifi, Tv, Coffee, Bath],
-      popular: false,
-    },
-    {
-      id: 2,
-      name: "Deluxe xona",
-      price: "250,000",
-      image: "/placeholder.svg?height=300&width=400",
-      capacity: "3 kishi",
-      size: "35 m²",
-      features: ["Bepul WiFi", "Balkon", "Jacuzzi", "Room service"],
-      amenities: [Wifi, Tv, Coffee, Bath],
-      popular: true,
-    },
-    {
-      id: 3,
-      name: "Suite xona",
-      price: "450,000",
-      image: "/placeholder.svg?height=300&width=400",
-      capacity: "4 kishi",
-      size: "60 m²",
-      features: [
-        "VIP xizmat",
-        "Alohida yashash xonasi",
-        "Panorama ko'rinish",
-        "Butler xizmati",
-      ],
-      amenities: [Wifi, Tv, Coffee, Bath, Car],
-      popular: false,
-    },
-  ];
+  const [rooms, setRooms] = useState<Room[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState("")
+
+  useEffect(() => {
+    loadRooms()
+  }, [])
+
+  const loadRooms = async () => {
+    setIsLoading(true)
+    setError("")
+    try {
+      const response = await RoomsAPI.getAllRooms()
+
+      if (response.success && response.data) {
+        setRooms(response.data.slice(0, 6))
+      } else {
+        setError(response.error || "Xonalarni yuklashda xatolik")
+      }
+    } catch (error) {
+      setError("Serverga ulanishda xatolik")
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const scrollToContact = () => {
+    if (typeof window !== "undefined") {
+      document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
+  if (error) {
+    return (
+      <section id="rooms" className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Bizning xonalar</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Har xil ehtiyojlar uchun mo'ljallangan zamonaviy va qulay xonalar.
+            </p>
+          </div>
+          <div className="text-center">
+            <div className="text-red-600 mb-4">{error}</div>
+            <Button onClick={loadRooms} variant="outline">
+              <RefreshCw className="w-4 h-4 mr-2" />
+              Qayta urinish
+            </Button>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  if (isLoading) {
+    return (
+      <section id="rooms" className="py-20 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Bizning xonalar</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Har xil ehtiyojlar uchun mo'ljallangan zamonaviy va qulay xonalar.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...Array(6)].map((_, index) => (
+              <Card key={index} className="overflow-hidden">
+                <CardHeader className="p-0">
+                  <div className="w-full h-64 bg-gray-200 animate-pulse"></div>
+                </CardHeader>
+                <CardContent className="p-6">
+                  <div className="h-6 bg-gray-200 rounded animate-pulse mb-4"></div>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse mb-4"></div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="text-center mt-8">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto" />
+            <p className="mt-2 text-gray-600">Xonalar yuklanmoqda...</p>
+          </div>
+        </div>
+      </section>
+    )
+  }
 
   return (
     <section id="rooms" className="py-20 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Bizning xonalar
-          </h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Bizning xonalar</h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Har xil ehtiyojlar uchun mo'ljallangan zamonaviy va qulay xonalar.
-            Barcha xonalarda yuqori sifatli jihozlar va professional xizmat.
+            Har xil ehtiyojlar uchun mo'ljallangan zamonaviy va qulay xonalar. Barcha xonalarda yuqori sifatli jihozlar
+            va professional xizmat.
           </p>
         </div>
 
-        <div className="flex justify-between items-start gap-8">
-          {rooms.map((room) => (
-            <Card
-              key={room.id}
-              className="overflow-hidden hover:shadow-xl transition-shadow duration-300 relative w-[30%]"
-            >
-              {room.popular && (
-                <Badge className="absolute top-4 left-4 z-10 bg-blue-600 hover:bg-blue-700">
-                  Mashhur
-                </Badge>
-              )}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {rooms.map((room) => {
+            const roomImage = room.images && room.images.length > 0 ? room.images[0].url : undefined
 
-              <CardHeader className="p-0">
-                <div className="relative overflow-hidden">
-                  <img
-                    src={room.image || "/placeholder.svg"}
-                    alt={room.name}
-                    className="w-full h-64 object-cover hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                </div>
-              </CardHeader>
+            return (
+              <Card
+                key={room.id}
+                className="overflow-hidden hover:shadow-xl transition-shadow duration-300 relative group"
+              >
+                {room.category?.name && (
+                  <Badge className="absolute top-4 left-4 z-10 bg-blue-600 hover:bg-blue-700 shadow-lg">
+                    {room.category.name}
+                  </Badge>
+                )}
 
-              <CardContent className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-xl font-bold text-gray-900">
-                    {room.name}
-                    <div className="flex items-center space-x-4 mb-4 text-sm text-gray-600">
-                      <div className="flex items-center space-x-1">
-                        <Users className="w-4 h-4" />
-                        <span>{room.capacity}</span>
+                <CardHeader className="p-0">
+                  <div className="relative overflow-hidden">
+                    <SimpleImage
+                      src={roomImage}
+                      alt={room.title}
+                      aspectRatio="video"
+                      className="group-hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                    {/* Image count indicator */}
+                    {room.images && room.images.length > 0 && (
+                      <div className="absolute bottom-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded-full flex items-center backdrop-blur-sm">
+                        <ImageIcon className="w-3 h-3 mr-1" />
+                        {room.images.length}
                       </div>
-                    </div>
-                  </h3>
-                  <div className="text-right">
-                    <div className="text-2xl font-bold text-blue-600">
-                      {room.price}
-                    </div>
-                    <div className="text-sm text-gray-500">so'm/kecha</div>
+                    )}
                   </div>
-                </div>
+                </CardHeader>
 
-                <div className="flex flex-wrap justify-start items-center gap-4 mb-4">
-                  {room.features.map((feature, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center space-x-2 text-sm text-gray-600"
-                    >
-                      <div className="w-1.5 h-1.5 bg-blue-600 rounded-full"></div>
-                      <span>{feature}</span>
+                <CardContent className="p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-xl font-bold text-gray-900">{room.title}</h3>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-blue-600">{room.price}</div>
+                      <div className="text-sm text-gray-500">so'm/kecha</div>
                     </div>
-                  ))}
-                </div>
-                {/* 
-                <div className="flex items-center space-x-3 mb-6">
-                  {room.amenities.map((Icon, index) => (
-                    <div
-                      key={index}
-                      className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center"
-                    >
-                      <Icon className="w-4 h-4 text-gray-600" />
-                    </div>
-                  ))}
-                </div> */}
-              </CardContent>
+                  </div>
 
-              <CardFooter className="p-6 pt-0">
-                <Button
-                  className="w-full bg-blue-600 hover:bg-blue-700 cursor-pointer"
-                  onClick={() =>
-                    document
-                      .getElementById("contact")
-                      ?.scrollIntoView({ behavior: "smooth" })
-                  }
-                >
-                  Ma'lumot olish
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
+                  <p className="text-sm text-gray-600 mb-4 line-clamp-2">{room.description}</p>
+
+                  <div className="mb-4">
+                    <p className="text-xs text-gray-500 mb-1">Qulayliklar:</p>
+                    <div className="flex flex-wrap gap-1">
+                      {room.amenities.slice(0, 3).map((amenity, index) => (
+                        <Badge key={index} variant="outline" className="text-xs">
+                          {amenity}
+                        </Badge>
+                      ))}
+                      {room.amenities.length > 3 && (
+                        <Badge variant="outline" className="text-xs">
+                          +{room.amenities.length - 3}
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+
+                <CardFooter className="p-6 pt-0">
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700" onClick={scrollToContact}>
+                    Ma'lumot olish
+                  </Button>
+                </CardFooter>
+              </Card>
+            )
+          })}
         </div>
+
+        {rooms.length === 0 && (
+          <div className="text-center py-12">
+            <ImageIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Hozircha xonalar mavjud emas</h3>
+            <p className="text-gray-500">Tez orada yangi xonalar qo'shiladi</p>
+          </div>
+        )}
 
         <div className="text-center mt-12">
           <Button
             variant="outline"
             size="lg"
             className="border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white"
-            onClick={() =>
-              document
-                .getElementById("contact")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
+            onClick={scrollToContact}
           >
-            Qo'shimcha ma'lumot
+            Barcha xonalarni ko'rish
           </Button>
         </div>
       </div>
     </section>
-  );
+  )
 }

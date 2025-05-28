@@ -2,11 +2,13 @@
 
 import type React from "react"
 import { createContext, useContext, useState, useEffect } from "react"
+import { AuthAPI } from "@/lib/api"
 
 interface AdminContextType {
   isAuthenticated: boolean
   logout: () => void
   isLoading: boolean
+  user: any
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined)
@@ -14,13 +16,14 @@ const AdminContext = createContext<AdminContextType | undefined>(undefined)
 export function AdminProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [user, setUser] = useState(null)
 
   useEffect(() => {
     // Check if user is authenticated only on client side
     const checkAuth = () => {
       if (typeof window !== "undefined") {
-        const token = document.cookie.includes("admin-token=authenticated")
-        setIsAuthenticated(token)
+        const authenticated = AuthAPI.isAuthenticated()
+        setIsAuthenticated(authenticated)
       }
       setIsLoading(false)
     }
@@ -28,14 +31,22 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     checkAuth()
   }, [])
 
-  const logout = () => {
-    if (typeof window !== "undefined") {
-      document.cookie = "admin-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"
+  const logout = async () => {
+    try {
+      await AuthAPI.logout()
       setIsAuthenticated(false)
+      setUser(null)
+      window.location.href = "/admin/login"
+    } catch (error) {
+      console.error("Logout error:", error)
+      // Force logout even if API call fails
+      setIsAuthenticated(false)
+      setUser(null)
       window.location.href = "/admin/login"
     }
   }
 
+  // Show loading state during hydration
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -44,7 +55,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     )
   }
 
-  return <AdminContext.Provider value={{ isAuthenticated, logout, isLoading }}>{children}</AdminContext.Provider>
+  return <AdminContext.Provider value={{ isAuthenticated, logout, isLoading, user }}>{children}</AdminContext.Provider>
 }
 
 export function useAdmin() {
