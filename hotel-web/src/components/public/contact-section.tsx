@@ -91,7 +91,7 @@ export default function ContactSection() {
           {/* Left side - Map and contact info */}
           <div className="space-y-8">
             {/* Google Map */}
-            <div className="relative overflow-hidden rounded-2xl shadow-lg h-80">
+            <div className="relative overflow-hidden rounded-2xl shadow-lg h-100">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.5!2d69.2401!3d41.2995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDE3JzU4LjIiTiA2OcKwMTQnMjQuNCJF!5e0!3m2!1sen!2s!4v1234567890"
                 width="100%"
@@ -164,7 +164,7 @@ export default function ContactSection() {
                         setFormData({ ...formData, name: e.target.value })
                       }
                       placeholder="Ismingizni kiriting"
-                      className="w-full p-5 pl-3 placeholder:text-base"
+                      className="w-full p-8 pl-6 placeholder:text-base"
                     />
                   </div>
 
@@ -184,7 +184,7 @@ export default function ContactSection() {
                         setFormData({ ...formData, phone: e.target.value })
                       }
                       placeholder="+998 90 123 45 67"
-                      className="w-full p-5 pl-3 placeholder:text-base"
+                      className="w-full p-8 pl-6 placeholder:text-base"
                     />
                   </div>
 
@@ -204,21 +204,21 @@ export default function ContactSection() {
                       }
                       placeholder="Xabaringizni yozing..."
                       rows={5}
-                      className="w-full h-[90px] pl-3 placeholder:text-base"
+                      className="w-full h-[90px] pt-4 pl-6 placeholder:text-base"
                     />
                   </div>
 
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold"
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg font-semibold p-8 cursor-pointer"
                   >
                     {isSubmitting ? (
                       "Yuborilmoqda..."
                     ) : (
                       <>
-                        <Send className="w-5 h-5 mr-2" />
-                        Xabar yuborish
+                        <Send className="w-6 h-6 mr-2 " />
+                        <span className="text-[20px]">Xabar yuborish</span>
                       </>
                     )}
                   </Button>

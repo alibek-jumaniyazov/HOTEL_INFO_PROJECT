@@ -7,19 +7,16 @@ import { CheckCircle, Users, Calendar, Award } from "lucide-react"
 export default function HotelInfo() {
   const features = [
     "Toshkent markazida qulay joylashuv",
-    "150 ta zamonaviy xona va suite",
+    "5 ta zamonaviy xona va suite",
     "24/7 xona xizmati",
     "Bepul WiFi barcha hududlarda",
-    "Fitnes markaz va spa",
-    "Biznes markaz va konferens zallari",
-    "Restoran va bar",
     "Bepul parking",
   ]
 
   const stats = [
-    { icon: Users, number: "10,000+", label: "Mamnun mijozlar" },
-    { icon: Calendar, number: "15+", label: "Yillik tajriba" },
-    { icon: Award, number: "25+", label: "Mukofotlar" },
+    { icon: Users, number: "500+", label: "Mamnun mijozlar" },
+    { icon: Calendar, number: "2+", label: "Yillik tajriba" },
+    // { icon: Award, number: "25+", label: "Mukofotlar" },
   ]
 
   return (
@@ -51,7 +48,7 @@ export default function HotelInfo() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 pt-8 border-t border-gray-200">
+            <div className="grid grid-cols-2 gap-6 pt-8 border-t border-gray-200">
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
                   <stat.icon className="w-8 h-8 text-blue-600 mx-auto mb-2" />
