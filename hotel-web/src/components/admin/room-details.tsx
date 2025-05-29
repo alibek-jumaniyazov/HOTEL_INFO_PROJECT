@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { X, Calendar, Tag, DollarSign, ImageIcon, Edit } from "lucide-react"
-import SimpleImage from "@/components/ui/simple-image"
+import ImageCarousel from "@/components/ui/image-carousel"
 import type { Room } from "@/lib/api"
 
 interface RoomDetailsProps {
@@ -14,12 +14,6 @@ interface RoomDetailsProps {
 }
 
 export default function RoomDetails({ room, onClose, onEdit }: RoomDetailsProps) {
-  // Get main image
-  const mainImage = room.images && room.images.length > 0 ? room.images[0].url : undefined
-
-  // Get additional images
-  const additionalImages = room.images && room.images.length > 1 ? room.images.slice(1) : []
-
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <Card className="w-full max-w-5xl max-h-[90vh] overflow-y-auto">
@@ -42,9 +36,17 @@ export default function RoomDetails({ room, onClose, onEdit }: RoomDetailsProps)
         </CardHeader>
 
         <CardContent className="p-6 space-y-6">
-          {/* Main Image */}
+          {/* Main Image Carousel */}
           <div className="relative overflow-hidden rounded-xl">
-            <SimpleImage src={mainImage} alt={room.title} className="w-full h-80" />
+            <ImageCarousel
+              images={room.images || []}
+              alt={room.title}
+              className="w-full h-80"
+              showArrows={true}
+              showDots={true}
+              autoPlay={true}
+              autoPlayInterval={5000}
+            />
             <div className="absolute top-4 right-4">
               <Badge className="bg-blue-600 text-white shadow-lg">{room.category?.name || "Kategoriasiz"}</Badge>
             </div>
@@ -112,27 +114,6 @@ export default function RoomDetails({ room, onClose, onEdit }: RoomDetailsProps)
               <p className="text-gray-500 bg-gray-50 p-4 rounded-lg">Qulayliklar haqida ma'lumot mavjud emas.</p>
             )}
           </div>
-
-          {/* Additional Images */}
-          {additionalImages.length > 0 && (
-            <div>
-              <h3 className="font-semibold text-gray-900 mb-4 text-lg">
-                Qo'shimcha Rasmlar ({additionalImages.length})
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {additionalImages.map((image) => (
-                  <div key={image.id} className="relative group">
-                    <SimpleImage
-                      src={image.url}
-                      alt={`${room.title} - ${image.id}`}
-                      aspectRatio="square"
-                      className="rounded-lg group-hover:scale-105 transition-transform duration-200"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* Technical Info */}
           <div className="bg-gray-50 rounded-lg p-6">
