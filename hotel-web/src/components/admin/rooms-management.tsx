@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Plus, Edit, Trash2, Search, Loader2, RefreshCw, Eye, ImageIcon } from "lucide-react"
 import RoomForm from "./room-form"
 import RoomDetails from "./room-details"
-import SimpleImage from "@/components/ui/simple-image"
+import ImageCarousel from "@/components/ui/image-carousel"
 import { RoomsAPI, type Room } from "@/lib/api"
 
 export default function RoomsManagement() {
@@ -169,25 +169,19 @@ export default function RoomsManagement() {
       {/* Rooms Grid */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredRooms.map((room) => {
-          const roomImage = room.images && room.images.length > 0 ? room.images[0].url : undefined
-          console.log("Room image URL:", roomImage)
-
           return (
             <Card key={room.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 group">
               <CardHeader className="p-0">
                 <div className="relative">
-                  <SimpleImage
-                    src={roomImage}
+                  <ImageCarousel
+                    images={room.images || []}
                     alt={room.title}
                     aspectRatio="video"
                     className="group-hover:scale-105 transition-transform duration-300"
+                    showArrows={true}
+                    showDots={true}
+                    autoPlay={false}
                   />
-
-                  {/* Image count badge */}
-                  <div className="absolute bottom-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded-full flex items-center backdrop-blur-sm">
-                    <ImageIcon className="w-3 h-3 mr-1" />
-                    {room.images?.length || 0}
-                  </div>
 
                   {/* Category badge */}
                   <div className="absolute top-3 left-3">
@@ -217,6 +211,13 @@ export default function RoomsManagement() {
                   <div className="flex justify-between">
                     <span>ID:</span>
                     <span className="font-mono text-xs">{room.id}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Rasmlar:</span>
+                    <span className="font-medium flex items-center">
+                      <ImageIcon className="w-3 h-3 mr-1" />
+                      {room.images?.length || 0}
+                    </span>
                   </div>
                 </div>
 

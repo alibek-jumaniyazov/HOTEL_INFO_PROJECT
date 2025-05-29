@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Loader2, RefreshCw, ImageIcon } from "lucide-react"
-import SimpleImage from "@/components/ui/simple-image"
+import ImageCarousel from "@/components/ui/image-carousel"
 import { RoomsAPI, type Room } from "@/lib/api"
 
 export default function RoomsSection() {
@@ -111,8 +111,6 @@ export default function RoomsSection() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {rooms.map((room) => {
-            const roomImage = room.images && room.images.length > 0 ? room.images[0].url : undefined
-
             return (
               <Card
                 key={room.id}
@@ -126,20 +124,15 @@ export default function RoomsSection() {
 
                 <CardHeader className="p-0">
                   <div className="relative overflow-hidden">
-                    <SimpleImage
-                      src={roomImage}
+                    <ImageCarousel
+                      images={room.images || []}
                       alt={room.title}
                       aspectRatio="video"
                       className="group-hover:scale-105 transition-transform duration-300"
+                      autoPlay={true}
+                      autoPlayInterval={4000}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                    {/* Image count indicator */}
-                    {room.images && room.images.length > 0 && (
-                      <div className="absolute bottom-3 right-3 bg-black/70 text-white text-xs px-2 py-1 rounded-full flex items-center backdrop-blur-sm">
-                        <ImageIcon className="w-3 h-3 mr-1" />
-                        {room.images.length}
-                      </div>
-                    )}
                   </div>
                 </CardHeader>
 
