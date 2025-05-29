@@ -23,45 +23,13 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     const checkAuth = () => {
       if (typeof window !== "undefined") {
         const authenticated = AuthAPI.isAuthenticated()
-        const userData = AuthAPI.getUser()
-
         setIsAuthenticated(authenticated)
-        setUser(userData)
-
-        if (authenticated) {
-          console.log("User authenticated:", userData)
-
-          // Check token expiry and show warning if needed
-          const expiryTime = AuthAPI.getTokenExpiryTime()
-          if (expiryTime) {
-            const timeUntilExpiry = expiryTime.getTime() - Date.now()
-            console.log("Token expires in:", Math.round(timeUntilExpiry / 1000 / 60), "minutes")
-          }
-        }
       }
       setIsLoading(false)
     }
 
     checkAuth()
-
-    // Set up periodic token check (every 5 minutes)
-    const tokenCheckInterval = setInterval(
-      () => {
-        if (typeof window !== "undefined") {
-          const authenticated = AuthAPI.isAuthenticated()
-          if (!authenticated && isAuthenticated) {
-            console.log("Token expired, logging out...")
-            setIsAuthenticated(false)
-            setUser(null)
-            window.location.href = "/admin/login"
-          }
-        }
-      },
-      5 * 60 * 1000,
-    ) // Check every 5 minutes
-
-    return () => clearInterval(tokenCheckInterval)
-  }, [isAuthenticated])
+  }, [])
 
   const logout = async () => {
     try {
@@ -82,10 +50,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Yuklanmoqda...</p>
-        </div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
     )
   }

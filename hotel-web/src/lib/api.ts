@@ -79,32 +79,14 @@ export interface CreateCategoryData {
 
 export interface UpdateCategoryData extends Partial<CreateCategoryData> {}
 
-// Token Management with automatic refresh
+// Token Management
 class TokenManager {
   private static readonly TOKEN_KEY = "admin-token"
   private static readonly REFRESH_TOKEN_KEY = "admin-refresh-token"
-  private static readonly TOKEN_EXPIRY_KEY = "admin-token-expiry"
-  private static readonly USER_KEY = "admin-user"
-
-  // Token expires in 2 hours (7200 seconds)
-  private static readonly TOKEN_EXPIRY_TIME = 2 * 60 * 60 * 1000 // 2 hours in milliseconds
 
   static getToken(): string | null {
     if (typeof window === "undefined") return null
-
-    const token = localStorage.getItem(this.TOKEN_KEY)
-    const expiry = localStorage.getItem(this.TOKEN_EXPIRY_KEY)
-
-    if (!token || !expiry) return null
-
-    // Check if token is expired
-    if (Date.now() > Number.parseInt(expiry)) {
-      console.log("Access token expired, clearing...")
-      this.clearTokens()
-      return null
-    }
-
-    return token
+    return localStorage.getItem(this.TOKEN_KEY)
   }
 
   static getRefreshToken(): string | null {
@@ -112,91 +94,30 @@ class TokenManager {
     return localStorage.getItem(this.REFRESH_TOKEN_KEY)
   }
 
-  static getUser(): any {
-    if (typeof window === "undefined") return null
-    const user = localStorage.getItem(this.USER_KEY)
-    return user ? JSON.parse(user) : null
-  }
-
-  static setTokens(accessToken: string, refreshToken: string, user?: any): void {
+  static setTokens(accessToken: string, refreshToken: string): void {
     if (typeof window === "undefined") return
-
-    const expiryTime = Date.now() + this.TOKEN_EXPIRY_TIME
-
     localStorage.setItem(this.TOKEN_KEY, accessToken)
     localStorage.setItem(this.REFRESH_TOKEN_KEY, refreshToken)
-    localStorage.setItem(this.TOKEN_EXPIRY_KEY, expiryTime.toString())
-
-    if (user) {
-      localStorage.setItem(this.USER_KEY, JSON.stringify(user))
-    }
-
-    // Set cookie for middleware
-    document.cookie = `admin-token=${accessToken}; path=/; max-age=7200` // 2 hours
-
-    console.log("Tokens set successfully", {
-      accessToken: accessToken.substring(0, 20) + "...",
-      expiresAt: new Date(expiryTime).toLocaleString(),
-    })
+    document.cookie = `admin-token=${accessToken}; path=/; max-age=86400`
   }
 
   static clearTokens(): void {
     if (typeof window === "undefined") return
-
     localStorage.removeItem(this.TOKEN_KEY)
     localStorage.removeItem(this.REFRESH_TOKEN_KEY)
-    localStorage.removeItem(this.TOKEN_EXPIRY_KEY)
-    localStorage.removeItem(this.USER_KEY)
-
-    // Clear cookie
     document.cookie = "admin-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT"
-
-    console.log("All tokens cleared")
   }
 
   static isAuthenticated(): boolean {
     return !!this.getToken()
   }
-
-  static isTokenExpiringSoon(): boolean {
-    if (typeof window === "undefined") return false
-
-    const expiry = localStorage.getItem(this.TOKEN_EXPIRY_KEY)
-    if (!expiry) return false
-
-    const expiryTime = Number.parseInt(expiry)
-    const now = Date.now()
-    const timeUntilExpiry = expiryTime - now
-
-    // Return true if token expires in less than 5 minutes
-    return timeUntilExpiry < 5 * 60 * 1000
-  }
-
-  static getTokenExpiryTime(): Date | null {
-    if (typeof window === "undefined") return null
-
-    const expiry = localStorage.getItem(this.TOKEN_EXPIRY_KEY)
-    return expiry ? new Date(Number.parseInt(expiry)) : null
-  }
 }
 
-// HTTP Client with automatic token handling and refresh
+// HTTP Client with automatic token handling
 class ApiClient {
-  private static isRefreshing = false
-  private static refreshPromise: Promise<boolean> | null = null
-
   private static async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`
-
-    // Get current token
-    let token = TokenManager.getToken()
-
-    // If token is expiring soon, try to refresh it
-    if (token && TokenManager.isTokenExpiringSoon() && !this.isRefreshing) {
-      console.log("Token expiring soon, attempting refresh...")
-      await this.refreshToken()
-      token = TokenManager.getToken()
-    }
+    const token = TokenManager.getToken()
 
     const config: RequestInit = {
       headers: {
@@ -215,13 +136,10 @@ class ApiClient {
     try {
       const response = await fetch(url, config)
 
-      // Handle 401 - Token expired or invalid
+      // Handle 401 - Token expired
       if (response.status === 401) {
-        console.log("Received 401, attempting token refresh...")
-
         const refreshed = await this.refreshToken()
         if (refreshed) {
-          // Retry the original request with new token
           const newToken = TokenManager.getToken()
           const retryConfig: RequestInit = {
             ...config,
@@ -230,19 +148,9 @@ class ApiClient {
               Authorization: `Bearer ${newToken}`,
             },
           }
-
-          console.log("Retrying request with new token...")
           const retryResponse = await fetch(url, retryConfig)
-
-          if (!retryResponse.ok) {
-            const retryData = await retryResponse.json()
-            throw new Error(retryData.message || retryData.error || `HTTP error! status: ${retryResponse.status}`)
-          }
-
           return await retryResponse.json()
         } else {
-          // Refresh failed, redirect to login
-          console.log("Token refresh failed, redirecting to login...")
           TokenManager.clearTokens()
           if (typeof window !== "undefined") {
             window.location.href = "/admin/login"
@@ -265,60 +173,30 @@ class ApiClient {
   }
 
   private static async refreshToken(): Promise<boolean> {
-    // Prevent multiple simultaneous refresh attempts
-    if (this.isRefreshing) {
-      if (this.refreshPromise) {
-        return await this.refreshPromise
+    const refreshToken = TokenManager.getRefreshToken()
+    if (!refreshToken) return false
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/admin/refresh`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ refreshToken }),
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        if (data.accessToken && data.refreshToken) {
+          TokenManager.setTokens(data.accessToken, data.refreshToken)
+          return true
+        }
       }
       return false
+    } catch (error) {
+      console.error("Token refresh failed:", error)
+      return false
     }
-
-    this.isRefreshing = true
-
-    this.refreshPromise = (async () => {
-      try {
-        const refreshToken = TokenManager.getRefreshToken()
-        if (!refreshToken) {
-          console.log("No refresh token available")
-          return false
-        }
-
-        console.log("Attempting to refresh token...")
-
-        const response = await fetch(`${API_BASE_URL}/admin/refresh`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ refreshToken }),
-        })
-
-        if (response.ok) {
-          const data = await response.json()
-
-          if (data.accessToken && data.refreshToken) {
-            console.log("Token refresh successful")
-            TokenManager.setTokens(data.accessToken, data.refreshToken, data.admin)
-            return true
-          } else {
-            console.log("Invalid refresh response:", data)
-            return false
-          }
-        } else {
-          const errorData = await response.json()
-          console.log("Token refresh failed:", errorData)
-          return false
-        }
-      } catch (error) {
-        console.error("Token refresh error:", error)
-        return false
-      } finally {
-        this.isRefreshing = false
-        this.refreshPromise = null
-      }
-    })()
-
-    return await this.refreshPromise
   }
 
   static async get<T>(endpoint: string): Promise<T> {
@@ -354,19 +232,12 @@ class ApiClient {
   static async delete<T>(endpoint: string): Promise<T> {
     return this.request<T>(endpoint, { method: "DELETE" })
   }
-
-  // Manual token refresh method
-  static async forceRefreshToken(): Promise<boolean> {
-    return this.refreshToken()
-  }
 }
 
 // Authentication API
 export class AuthAPI {
-  static async login(credentials: LoginCredentials): Promise<{ success: boolean; error?: string; user?: any }> {
+  static async login(credentials: LoginCredentials): Promise<{ success: boolean; error?: string }> {
     try {
-      console.log("Attempting login...")
-
       const response = await fetch(`${API_BASE_URL}/admin/login`, {
         method: "POST",
         headers: {
@@ -378,13 +249,8 @@ export class AuthAPI {
       const data = await response.json()
 
       if (response.ok && data.accessToken && data.refreshToken) {
-        console.log("Login successful")
-        TokenManager.setTokens(data.accessToken, data.refreshToken, data.admin)
-
-        return {
-          success: true,
-          user: data.admin,
-        }
+        TokenManager.setTokens(data.accessToken, data.refreshToken)
+        return { success: true }
       }
 
       return {
@@ -404,7 +270,6 @@ export class AuthAPI {
     try {
       const token = TokenManager.getToken()
       if (token) {
-        console.log("Logging out...")
         await fetch(`${API_BASE_URL}/admin/logout`, {
           method: "POST",
           headers: {
@@ -416,24 +281,11 @@ export class AuthAPI {
       }
     } finally {
       TokenManager.clearTokens()
-      console.log("Logout completed")
     }
   }
 
   static isAuthenticated(): boolean {
     return TokenManager.isAuthenticated()
-  }
-
-  static getUser(): any {
-    return TokenManager.getUser()
-  }
-
-  static getTokenExpiryTime(): Date | null {
-    return TokenManager.getTokenExpiryTime()
-  }
-
-  static async refreshToken(): Promise<boolean> {
-    return ApiClient.forceRefreshToken()
   }
 }
 
@@ -567,21 +419,11 @@ export class RoomsAPI {
         formData.append("description", roomData.description)
         formData.append("price", roomData.price)
         formData.append("categoryId", roomData.categoryId.toString())
-
-        // Amenities ni to'g'ri formatda qo'shish
-        roomData.amenities.forEach((amenity) => {
-          formData.append("amenities[]", amenity)
-        })
+        formData.append("amenities", JSON.stringify(roomData.amenities))
 
         // Add files
         roomData.files.forEach((file) => {
           formData.append("files", file)
-        })
-
-        console.log("Creating room with FormData:", {
-          title: roomData.title,
-          amenities: roomData.amenities,
-          files: roomData.files.length,
         })
 
         const response = await ApiClient.post<Room>("/rooms", formData, true)
@@ -592,7 +434,6 @@ export class RoomsAPI {
       } else {
         // No files, use regular JSON
         const { files, ...dataWithoutFiles } = roomData
-        console.log("Creating room with JSON:", dataWithoutFiles)
         const response = await ApiClient.post<Room>("/rooms", dataWithoutFiles)
         return {
           success: true,
@@ -622,32 +463,16 @@ export class RoomsAPI {
         if (roomData.description) formData.append("description", roomData.description)
         if (roomData.price) formData.append("price", roomData.price)
         if (roomData.categoryId) formData.append("categoryId", roomData.categoryId.toString())
-
-        // Amenities ni to'g'ri formatda qo'shish
-        if (roomData.amenities) {
-          roomData.amenities.forEach((amenity) => {
-            formData.append("amenities[]", amenity)
-          })
-        }
+        if (roomData.amenities) formData.append("amenities", JSON.stringify(roomData.amenities))
 
         // Add deleteImages if provided
         if (roomData.deleteImages && roomData.deleteImages.length > 0) {
-          roomData.deleteImages.forEach((imageId) => {
-            formData.append("deleteImages[]", imageId.toString())
-          })
+          formData.append("deleteImages", JSON.stringify(roomData.deleteImages))
         }
 
         // Add files
         roomData.files.forEach((file) => {
           formData.append("files", file)
-        })
-
-        console.log("Updating room with FormData:", {
-          id,
-          title: roomData.title,
-          amenities: roomData.amenities,
-          files: roomData.files.length,
-          deleteImages: roomData.deleteImages,
         })
 
         const response = await ApiClient.patch<Room>(`/rooms/${id}`, formData, true)
@@ -658,7 +483,6 @@ export class RoomsAPI {
       } else {
         // No files, use regular JSON
         const { files, ...dataWithoutFiles } = roomData
-        console.log("Updating room with JSON:", { id, ...dataWithoutFiles })
         const response = await ApiClient.patch<Room>(`/rooms/${id}`, dataWithoutFiles)
         return {
           success: true,
@@ -699,7 +523,7 @@ export class HotelAPI {
     phone: "+998 90 123 45 67",
     email: "info@luxuryhotel.uz",
     features: ["Bepul WiFi", "Parking", "Restaurant", "Fitnes zal", "Spa", "Biznes markaz"],
-    image: "/placeholder.svg?height=600&width=800",
+    image: "",
     rating: 5.0,
     totalRooms: 150,
     createdAt: new Date().toISOString(),
