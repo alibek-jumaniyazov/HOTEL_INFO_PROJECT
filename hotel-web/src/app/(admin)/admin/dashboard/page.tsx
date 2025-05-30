@@ -8,7 +8,7 @@ export default function AdminDashboard() {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-
+{/* 
       <div className="flex-1 flex flex-col overflow-hidden">
         <AdminHeader />
 
@@ -23,7 +23,7 @@ export default function AdminDashboard() {
 
             <div className="grid lg:grid-cols-3 gap-8 mt-8">
               <div className="lg:col-span-2">
-                {/* <RecentMessages /> */}
+                <RecentMessages />
               </div>
               <div>
                 <QuickActions />
@@ -31,7 +31,7 @@ export default function AdminDashboard() {
             </div>
           </div>
         </main>
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 import { LayoutDashboard, Building, Bed, ChevronLeft, ChevronRight, Tag } from "lucide-react"
 
 const navigation = [
-  { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
+  // { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { name: "Hotel Ma'lumotlari", href: "/admin/hotel", icon: Building },
   { name: "Kategoriyalar", href: "/admin/categories", icon: Tag },
   { name: "Xonalar", href: "/admin/rooms", icon: Bed },
