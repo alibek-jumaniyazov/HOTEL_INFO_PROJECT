@@ -1,19 +1,20 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import SimpleImage from "./simple-image"
+import { useState, useEffect, useRef } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import SimpleImage from "./simple-image";
+import { Image } from "antd";
 
 interface ImageCarouselProps {
-  images: Array<{ id: number; url: string }>
-  alt: string
-  className?: string
-  aspectRatio?: "square" | "video" | "auto"
-  showDots?: boolean
-  showArrows?: boolean
-  autoPlay?: boolean
-  autoPlayInterval?: number
+  images: Array<{ id: number; url: string }>;
+  alt: string;
+  className?: string;
+  aspectRatio?: "square" | "video" | "auto";
+  showDots?: boolean;
+  showArrows?: boolean;
+  autoPlay?: boolean;
+  autoPlayInterval?: number;
 }
 
 export default function ImageCarousel({
@@ -26,90 +27,99 @@ export default function ImageCarousel({
   autoPlay = false,
   autoPlayInterval = 5000,
 }: ImageCarouselProps) {
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [isHovered, setIsHovered] = useState(false)
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
-  const touchStartX = useRef<number | null>(null)
-  const touchEndX = useRef<number | null>(null)
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
 
   // Auto play functionality
   useEffect(() => {
-    if (!autoPlay || isHovered || images.length <= 1) return
+    if (!autoPlay || isHovered || images.length <= 1) return;
 
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length)
-    }, autoPlayInterval)
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, autoPlayInterval);
 
-    return () => clearInterval(interval)
-  }, [autoPlay, autoPlayInterval, isHovered, images.length])
+    return () => clearInterval(interval);
+  }, [autoPlay, autoPlayInterval, isHovered, images.length]);
 
   const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length)
-  }
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
 
   const goToNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % images.length)
-  }
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  };
 
   const goToSlide = (index: number) => {
-    setCurrentIndex(index)
-  }
+    setCurrentIndex(index);
+  };
 
   // Keyboard navigation on hover
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "ArrowLeft") {
-        goToPrevious()
+        goToPrevious();
       } else if (event.key === "ArrowRight") {
-        goToNext()
+        goToNext();
       }
-    }
+    };
 
     if (isHovered) {
-      window.addEventListener("keydown", handleKeyDown)
-      return () => window.removeEventListener("keydown", handleKeyDown)
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
     }
-  }, [isHovered])
+  }, [isHovered]);
 
   // Touch handlers
   const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX
-  }
+    touchStartX.current = e.touches[0].clientX;
+  };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    touchEndX.current = e.touches[0].clientX
-  }
+    touchEndX.current = e.touches[0].clientX;
+  };
 
   const handleTouchEnd = () => {
-    if (touchStartX.current === null || touchEndX.current === null) return
-    const deltaX = touchStartX.current - touchEndX.current
+    if (touchStartX.current === null || touchEndX.current === null) return;
+    const deltaX = touchStartX.current - touchEndX.current;
 
     if (Math.abs(deltaX) > 50) {
       if (deltaX > 0) {
         // Swipe left => next image
-        goToNext()
+        goToNext();
       } else {
         // Swipe right => previous image
-        goToPrevious()
+        goToPrevious();
       }
     }
     // Reset refs
-    touchStartX.current = null
-    touchEndX.current = null
-  }
+    touchStartX.current = null;
+    touchEndX.current = null;
+  };
 
   if (!images || images.length === 0) {
     return (
-      <div className={`bg-gray-100 flex items-center justify-center z-40 ${className}`}>
+      <div
+        className={`bg-gray-100 flex items-center justify-center z-40 ${className}`}
+      >
         <div className="text-gray-400 text-center">
           <div className="text-xs">Rasm mavjud emas</div>
         </div>
       </div>
-    )
+    );
   }
 
   if (images.length === 1) {
-    return <SimpleImage src={images[0].url} alt={alt} className={className} aspectRatio={aspectRatio} />
+    return (
+      <SimpleImage
+        src={images[0].url}
+        alt={alt}
+        className={className}
+        aspectRatio={aspectRatio}
+      />
+    );
   }
 
   return (
@@ -127,16 +137,23 @@ export default function ImageCarousel({
           className="flex transition-transform duration-300 ease-in-out h-full"
           style={{ transform: `translateX(-${currentIndex * 100}%)` }}
         >
-          {images.map((image, index) => (
-            <div key={image.id} className="w-full h-full flex-shrink-0">
-              <SimpleImage
-                src={image.url}
-                alt={`${alt} - ${index + 1}`}
-                className="w-full h-full"
-                aspectRatio={aspectRatio}
-              />
-            </div>
-          ))}
+          <Image.PreviewGroup
+            preview={{
+              onChange: (current, prev) =>
+                console.log(`current index: ${current}, prev index: ${prev}`),
+            }}
+          >
+            {images.map((image, index) => (
+              <div key={image.id} className="w-full h-full flex-shrink-0">
+                <SimpleImage
+                  src={image.url}
+                  alt={`${alt} - ${index + 1}`}
+                  className="w-full h-full"
+                  aspectRatio={aspectRatio}
+                />
+              </div>
+            ))}
+          </Image.PreviewGroup>
         </div>
       </div>
 
@@ -171,7 +188,9 @@ export default function ImageCarousel({
             <button
               key={index}
               className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                index === currentIndex ? "bg-white scale-125" : "bg-white/50 hover:bg-white/75"
+                index === currentIndex
+                  ? "bg-white scale-125"
+                  : "bg-white/50 hover:bg-white/75"
               }`}
               onClick={() => goToSlide(index)}
               aria-label={`Go to slide ${index + 1}`}
@@ -185,5 +204,5 @@ export default function ImageCarousel({
         {currentIndex + 1} / {images.length}
       </div>
     </div>
-  )
+  );
 }

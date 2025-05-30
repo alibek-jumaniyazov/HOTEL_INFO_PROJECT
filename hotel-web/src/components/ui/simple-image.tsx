@@ -89,13 +89,14 @@ export default function SimpleImage({
           </div>
         </div>
       )}
+
       <Image
         width={200}
         src={imageUrl || "/placeholder.svg"}
         alt={alt}
         width="100%"
         height="100%"
-        className={`!w-full !h-full object-cover transition-opacity duration-300 ${isLoading ? "opacity-0" : "opacity-100"}`}
+        className={`w-full !h-full object-cover transition-opacity duration-300 ${isLoading ? "opacity-0" : "opacity-100"}`}
         onLoad={handleImageLoad}
         onError={handleImageError}
         loading="lazy"
