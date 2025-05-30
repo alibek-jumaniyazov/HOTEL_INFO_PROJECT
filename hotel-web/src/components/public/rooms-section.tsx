@@ -1,52 +1,60 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Loader2, RefreshCw, ImageIcon } from "lucide-react"
-import ImageCarousel from "@/components/ui/image-carousel"
-import { RoomsAPI, type Room } from "@/lib/api"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Loader2, RefreshCw, ImageIcon } from "lucide-react";
+import ImageCarousel from "@/components/ui/image-carousel";
+import { RoomsAPI, type Room } from "@/lib/api";
 
 export default function RoomsSection() {
-  const [rooms, setRooms] = useState<Room[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState("")
-
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [roomsNumber, setRoomsNumber] = useState(3);
   useEffect(() => {
-    loadRooms()
-  }, [])
+    loadRooms();
+  }, []);
 
   const loadRooms = async () => {
-    setIsLoading(true)
-    setError("")
+    setIsLoading(true);
+    setError("");
     try {
-      const response = await RoomsAPI.getAllRooms()
+      const response = await RoomsAPI.getAllRooms();
 
       if (response.success && response.data) {
-        setRooms(response.data.slice(0, 6))
+        setRooms(response.data.slice(0, 6));
       } else {
-        setError(response.error || "Xonalarni yuklashda xatolik")
+        setError(response.error || "Xonalarni yuklashda xatolik");
       }
     } catch (error) {
-      setError("Serverga ulanishda xatolik")
+      setError("Serverga ulanishda xatolik");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const scrollToContact = () => {
-    if (typeof window !== "undefined") {
-      document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
-    }
-  }
+    // if (typeof window !== "undefined") {
+    //   document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })
+    // }
+    setRoomsNumber((prev) => prev + 3);
+  };
 
   if (error) {
     return (
       <section id="rooms" className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Bizning xonalar</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Bizning xonalar
+            </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Har xil ehtiyojlar uchun mo'ljallangan zamonaviy va qulay xonalar.
             </p>
@@ -60,7 +68,7 @@ export default function RoomsSection() {
           </div>
         </div>
       </section>
-    )
+    );
   }
 
   if (isLoading) {
@@ -68,7 +76,9 @@ export default function RoomsSection() {
       <section id="rooms" className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Bizning xonalar</h2>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Bizning xonalar
+            </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
               Har xil ehtiyojlar uchun mo'ljallangan zamonaviy va qulay xonalar.
             </p>
@@ -95,22 +105,24 @@ export default function RoomsSection() {
           </div>
         </div>
       </section>
-    )
+    );
   }
 
   return (
     <section id="rooms" className="py-20 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Bizning xonalar</h2>
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+            Bizning xonalar
+          </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Har xil ehtiyojlar uchun mo'ljallangan zamonaviy va qulay xonalar. Barcha xonalarda yuqori sifatli jihozlar
-            va professional xizmat.
+            Har xil ehtiyojlar uchun mo'ljallangan zamonaviy va qulay xonalar.
+            Barcha xonalarda yuqori sifatli jihozlar va professional xizmat.
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {rooms.map((room) => {
+          {rooms.slice(0,roomsNumber).map((room) => {
             return (
               <Card
                 key={room.id}
@@ -138,20 +150,30 @@ export default function RoomsSection() {
 
                 <CardContent className="p-6">
                   <div className="flex justify-between items-start mb-4">
-                    <h3 className="text-xl font-bold text-gray-900">{room.title}</h3>
+                    <h3 className="text-xl font-bold text-gray-900">
+                      {room.title}
+                    </h3>
                     <div className="text-right">
-                      <div className="text-2xl font-bold text-blue-600">{room.price}</div>
+                      <div className="text-2xl font-bold text-blue-600">
+                        {room.price}
+                      </div>
                       <div className="text-sm text-gray-500">so'm/kecha</div>
                     </div>
                   </div>
 
-                  <p className="text-sm text-gray-600 mb-4 line-clamp-2">{room.description}</p>
+                  <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                    {room.description}
+                  </p>
 
                   <div className="mb-4">
                     <p className="text-xs text-gray-500 mb-1">Qulayliklar:</p>
                     <div className="flex flex-wrap gap-1">
                       {room.amenities.slice(0, 3).map((amenity, index) => (
-                        <Badge key={index} variant="outline" className="text-xs">
+                        <Badge
+                          key={index}
+                          variant="outline"
+                          className="text-xs"
+                        >
                           {amenity}
                         </Badge>
                       ))}
@@ -165,19 +187,24 @@ export default function RoomsSection() {
                 </CardContent>
 
                 <CardFooter className="p-6 pt-0">
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700" onClick={scrollToContact}>
+                  <Button
+                    className="w-full bg-blue-600 hover:bg-blue-700"
+                    onClick={scrollToContact}
+                  >
                     Ma'lumot olish
                   </Button>
                 </CardFooter>
               </Card>
-            )
+            );
           })}
         </div>
 
         {rooms.length === 0 && (
           <div className="text-center py-12">
             <ImageIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Hozircha xonalar mavjud emas</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Hozircha xonalar mavjud emas
+            </h3>
             <p className="text-gray-500">Tez orada yangi xonalar qo'shiladi</p>
           </div>
         )}
@@ -194,5 +221,5 @@ export default function RoomsSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

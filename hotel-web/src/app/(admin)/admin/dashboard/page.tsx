@@ -23,7 +23,7 @@ export default function AdminDashboard() {
 
             <div className="grid lg:grid-cols-3 gap-8 mt-8">
               <div className="lg:col-span-2">
-                <RecentMessages />
+                {/* <RecentMessages /> */}
               </div>
               <div>
                 <QuickActions />
