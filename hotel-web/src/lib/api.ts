@@ -124,83 +124,82 @@ class TokenManager {
   }
 }
 
-
 export class ApiClient {
-private static async request<T>(
-  endpoint: string,
-  options: RequestInit = {}
-): Promise<T> {
-  const url = `${API_BASE_URL}${endpoint}`;
-  let token = TokenManager.getToken();
+  private static async request<T>(
+    endpoint: string,
+    options: RequestInit = {}
+  ): Promise<T> {
+    const url = `${API_BASE_URL}${endpoint}`;
+    let token = TokenManager.getToken();
 
-  let headers: Record<string, string> = {
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
+    let headers: Record<string, string> = {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
 
-  if (!(options.body instanceof FormData)) {
-    headers["Content-Type"] = "application/json";
-  }
+    if (!(options.body instanceof FormData)) {
+      headers["Content-Type"] = "application/json";
+    }
 
-  let config: RequestInit = {
-    ...options,
-    headers: {
-      ...headers,
-      ...(options.headers || {}),
-    },
-  };
+    let config: RequestInit = {
+      ...options,
+      headers: {
+        ...headers,
+        ...(options.headers || {}),
+      },
+    };
 
-  try {
-    let response = await fetch(url, config);
+    try {
+      let response = await fetch(url, config);
 
-    if (response.status === 401) {
-      console.log("Token expired. Trying refresh...");
+      if (response.status === 401) {
+        console.log("Token expired. Trying refresh...");
 
-      const refreshed = await this.refreshToken();
-      if (refreshed) {
-        const newToken = TokenManager.getToken();
+        const refreshed = await this.refreshToken();
+        if (refreshed) {
+          const newToken = TokenManager.getToken();
 
-        const retryHeaders: Record<string, string> = {
-          ...(newToken ? { Authorization: `Bearer ${newToken}` } : {}),
-        };
+          const retryHeaders: Record<string, string> = {
+            ...(newToken ? { Authorization: `Bearer ${newToken}` } : {}),
+          };
 
-        if (!(options.body instanceof FormData)) {
-          retryHeaders["Content-Type"] = "application/json";
+          if (!(options.body instanceof FormData)) {
+            retryHeaders["Content-Type"] = "application/json";
+          }
+
+          const retryConfig: RequestInit = {
+            ...options,
+            headers: {
+              ...retryHeaders,
+              ...(options.headers || {}),
+            },
+          };
+
+          response = await fetch(url, retryConfig);
+        } else {
+          TokenManager.clearTokens();
+          if (typeof window !== "undefined") {
+            window.location.href = "/admin/login";
+          }
+          throw new Error("Authentication failed");
         }
-
-        const retryConfig: RequestInit = {
-          ...options,
-          headers: {
-            ...retryHeaders,
-            ...(options.headers || {}),
-          },
-        };
-
-        response = await fetch(url, retryConfig);
-      } else {
-        TokenManager.clearTokens();
-        if (typeof window !== "undefined") {
-          window.location.href = "/admin/login";
-        }
-        throw new Error("Authentication failed");
       }
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || data.error || `HTTP error! status: ${response.status}`
+        );
+      }
+
+      return data;
+    } catch (error) {
+      console.error("API Request failed:", error);
+      throw error;
     }
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.message || data.error || `HTTP error! status: ${response.status}`);
-    }
-
-    return data;
-  } catch (error) {
-    console.error("API Request failed:", error);
-    throw error;
   }
-}
-
 
   private static async refreshToken(): Promise<boolean> {
-
     const refreshToken = TokenManager.getRefreshToken();
     if (!refreshToken) return false;
 

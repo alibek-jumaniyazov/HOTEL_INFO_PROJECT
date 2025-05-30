@@ -27,7 +27,7 @@ export default function AdminLogin() {
     if (typeof window !== "undefined") {
       const isAuthenticated = AuthAPI.isAuthenticated();
       if (isAuthenticated) {
-        router.replace("/admin/dashboard");
+        router.replace("/admin/rooms");
       }
     }
   }, [router]);
@@ -41,7 +41,7 @@ export default function AdminLogin() {
       const response = await AuthAPI.login(credentials);
 
       if (response.success) {
-        router.push("/admin/dashboard");
+        router.push("/admin/rooms");
       } else {
         setError(response.error || "Login jarayonida xatolik yuz berdi");
       }

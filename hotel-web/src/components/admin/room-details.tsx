@@ -56,7 +56,7 @@ export default function RoomDetails({ room, onClose, onEdit }: RoomDetailsProps)
           <div className="grid md:grid-cols-3 gap-6">
             <div className="space-y-4">
               <div className="flex items-center space-x-3 p-4 bg-green-50 rounded-lg">
-                <DollarSign className="w-6 h-6 text-green-600" />
+                {/* <DollarSign className="w-6 h-6 text-green-600" /> */}
                 <div>
                   <p className="text-sm text-gray-500">Narx</p>
                   <p className="font-bold text-lg text-green-600">{room.price} so'm/kecha</p>
