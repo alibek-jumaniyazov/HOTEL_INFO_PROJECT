@@ -84,101 +84,123 @@ class TokenManager {
   private static readonly TOKEN_KEY = "admin-token";
   private static readonly REFRESH_TOKEN_KEY = "admin-refresh-token";
 
+  // Access tokenni olish (localStorage dan)
   static getToken(): string | null {
     if (typeof window === "undefined") return null;
     return localStorage.getItem(this.TOKEN_KEY);
   }
 
+  // Refresh tokenni olish
   static getRefreshToken(): string | null {
     if (typeof window === "undefined") return null;
     return localStorage.getItem(this.REFRESH_TOKEN_KEY);
   }
 
+  // Yangi access token va refresh tokenni saqlash
   static setTokens(accessToken: string, refreshToken: string): void {
     if (typeof window === "undefined") return;
     localStorage.setItem(this.TOKEN_KEY, accessToken);
     localStorage.setItem(this.REFRESH_TOKEN_KEY, refreshToken);
-    document.cookie = `admin-token=${accessToken}; path=/; max-age=86400`;
+
+    // Cookie ga ham tokenni yozish (agar kerak bo‘lsa)
+    // max-age: 86400 sekund = 1 kun
+    document.cookie = `admin-token=${accessToken}; path=/; max-age=86400; SameSite=Lax`;
   }
 
+  // Tokenlarni tozalash (logout uchun)
   static clearTokens(): void {
     if (typeof window === "undefined") return;
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.REFRESH_TOKEN_KEY);
+
+    // Cookie ni o‘chirib tashlash
     document.cookie =
-      "admin-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      "admin-token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax";
   }
 
+  // Foydalanuvchi login qilinganligini tekshirish
   static isAuthenticated(): boolean {
     return !!this.getToken();
   }
 }
 
-// HTTP Client with automatic token handling
-class ApiClient {
-  private static async request<T>(
-    endpoint: string,
-    options: RequestInit = {}
-  ): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
-    const token = TokenManager.getToken();
 
-    const config: RequestInit = {
-      headers: {
-        "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` }),
-        ...options.headers,
-      },
-      ...options,
-    };
+export class ApiClient {
+private static async request<T>(
+  endpoint: string,
+  options: RequestInit = {}
+): Promise<T> {
+  const url = `${API_BASE_URL}${endpoint}`;
+  let token = TokenManager.getToken();
 
-    // Remove Content-Type header if FormData is being sent
-    if (options.body instanceof FormData) {
-      delete (config.headers as any)["Content-Type"];
-    }
+  let headers: Record<string, string> = {
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
 
-    try {
-      const response = await fetch(url, config);
-
-      // Handle 401 - Token expired
-      if (response.status === 401) {
-        const refreshed = await this.refreshToken();
-        if (refreshed) {
-          const newToken = TokenManager.getToken();
-          const retryConfig: RequestInit = {
-            ...config,
-            headers: {
-              ...config.headers,
-              Authorization: `Bearer ${newToken}`,
-            },
-          };
-          const retryResponse = await fetch(url, retryConfig);
-          return await retryResponse.json();
-        } else {
-          TokenManager.clearTokens();
-          if (typeof window !== "undefined") {
-            window.location.href = "/admin/login";
-          }
-          throw new Error("Authentication failed");
-        }
-      }
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.message || data.error || `HTTP error! status: ${response.status}`
-        );
-      }
-
-      return data;
-    } catch (error) {
-      console.error("API Request failed:", error);
-      throw error;
-    }
+  if (!(options.body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
   }
 
+  let config: RequestInit = {
+    ...options,
+    headers: {
+      ...headers,
+      ...(options.headers || {}),
+    },
+  };
+
+  try {
+    let response = await fetch(url, config);
+
+    if (response.status === 401) {
+      console.log("Token expired. Trying refresh...");
+
+      const refreshed = await this.refreshToken();
+      if (refreshed) {
+        const newToken = TokenManager.getToken();
+
+        const retryHeaders: Record<string, string> = {
+          ...(newToken ? { Authorization: `Bearer ${newToken}` } : {}),
+        };
+
+        if (!(options.body instanceof FormData)) {
+          retryHeaders["Content-Type"] = "application/json";
+        }
+
+        const retryConfig: RequestInit = {
+          ...options,
+          headers: {
+            ...retryHeaders,
+            ...(options.headers || {}),
+          },
+        };
+
+        response = await fetch(url, retryConfig);
+      } else {
+        TokenManager.clearTokens();
+        if (typeof window !== "undefined") {
+          window.location.href = "/admin/login";
+        }
+        throw new Error("Authentication failed");
+      }
+    }
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || data.error || `HTTP error! status: ${response.status}`);
+    }
+
+    return data;
+  } catch (error) {
+    console.error("API Request failed:", error);
+    throw error;
+  }
+}
+
+
   private static async refreshToken(): Promise<boolean> {
+
     const refreshToken = TokenManager.getRefreshToken();
     if (!refreshToken) return false;
 
@@ -190,14 +212,15 @@ class ApiClient {
         },
         body: JSON.stringify({ refreshToken }),
       });
+      console.log("Refresh response:", response);
+      if (!response.ok) return false;
 
-      if (response.ok) {
-        const data = await response.json();
-        if (data.accessToken && data.refreshToken) {
-          TokenManager.setTokens(data.accessToken, data.refreshToken);
-          return true;
-        }
+      const data = await response.json();
+      if (data.accessToken) {
+        TokenManager.setTokens(data.accessToken, refreshToken);
+        return true;
       }
+
       return false;
     } catch (error) {
       console.error("Token refresh failed:", error);
@@ -291,9 +314,7 @@ export class AuthAPI {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }).catch(() => {
-          // Ignore logout endpoint errors
-        });
+        }).catch(() => {});
       }
     } finally {
       TokenManager.clearTokens();
