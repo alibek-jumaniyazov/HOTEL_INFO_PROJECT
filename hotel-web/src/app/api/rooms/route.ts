@@ -1,4 +1,4 @@
-import { type NextRequest, NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server";
 
 // Temporary in-memory storage (in real app, use database)
 const rooms = [
@@ -36,7 +36,12 @@ const rooms = [
     price: 450000,
     capacity: 4,
     size: 60,
-    features: ["VIP xizmat", "Alohida yashash xonasi", "Panorama ko'rinish", "Butler xizmati"],
+    features: [
+      "VIP xizmat",
+      "Alohida yashash xonasi",
+      "Panorama ko'rinish",
+      "Butler xizmati",
+    ],
     amenities: ["wifi", "tv", "coffee", "bath", "car"],
     status: "available",
     image: "",
@@ -44,13 +49,16 @@ const rooms = [
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
-]
+];
 
 // GET - Bitta xonani olish
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } },
+) {
   try {
-    const roomId = Number.parseInt(params.id)
-    const room = rooms.find((r) => r.id === roomId)
+    const roomId = Number.parseInt(params.id);
+    const room = rooms.find((r) => r.id === roomId);
 
     if (!room) {
       return NextResponse.json(
@@ -59,31 +67,35 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
           error: "Xona topilmadi",
         },
         { status: 404 },
-      )
+      );
     }
 
     return NextResponse.json({
       success: true,
       data: room,
-    })
+    });
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       {
         success: false,
         error: "Xonani olishda xatolik",
       },
       { status: 500 },
-    )
+    );
   }
 }
 
 // PUT - Xonani yangilash
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } },
+) {
   try {
-    const roomId = Number.parseInt(params.id)
-    const body = await request.json()
+    const roomId = Number.parseInt(params.id);
+    const body = await request.json();
 
-    const roomIndex = rooms.findIndex((r) => r.id === roomId)
+    const roomIndex = rooms.findIndex((r) => r.id === roomId);
 
     if (roomIndex === -1) {
       return NextResponse.json(
@@ -92,7 +104,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
           error: "Xona topilmadi",
         },
         { status: 404 },
-      )
+      );
     }
 
     // Update room
@@ -100,29 +112,33 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       ...rooms[roomIndex],
       ...body,
       updatedAt: new Date().toISOString(),
-    }
+    };
 
     return NextResponse.json({
       success: true,
       data: rooms[roomIndex],
       message: "Xona muvaffaqiyatli yangilandi",
-    })
+    });
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       {
         success: false,
         error: "Xonani yangilashda xatolik",
       },
       { status: 500 },
-    )
+    );
   }
 }
 
 // DELETE - Xonani o'chirish
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } },
+) {
   try {
-    const roomId = Number.parseInt(params.id)
-    const roomIndex = rooms.findIndex((r) => r.id === roomId)
+    const roomId = Number.parseInt(params.id);
+    const roomIndex = rooms.findIndex((r) => r.id === roomId);
 
     if (roomIndex === -1) {
       return NextResponse.json(
@@ -131,24 +147,25 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
           error: "Xona topilmadi",
         },
         { status: 404 },
-      )
+      );
     }
 
     // Remove room
-    const deletedRoom = rooms.splice(roomIndex, 1)[0]
+    const deletedRoom = rooms.splice(roomIndex, 1)[0];
 
     return NextResponse.json({
       success: true,
       data: deletedRoom,
       message: "Xona muvaffaqiyatli o'chirildi",
-    })
+    });
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       {
         success: false,
         error: "Xonani o'chirishda xatolik",
       },
       { status: 500 },
-    )
+    );
   }
 }

@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Plus, Edit, Settings, BarChart3 } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Plus, Edit,} from "lucide-react";
 
 export default function QuickActions() {
   const actions = [
@@ -28,7 +28,7 @@ export default function QuickActions() {
     //   icon: Settings,
     //   action: "settings",
     // },
-  ]
+  ];
 
   return (
     <Card>
@@ -37,7 +37,11 @@ export default function QuickActions() {
       </CardHeader>
       <CardContent className="space-y-3">
         {actions.map((action, index) => (
-          <Button key={index} variant="outline" className="w-full justify-start h-auto p-4">
+          <Button
+            key={index}
+            variant="outline"
+            className="w-full justify-start h-auto p-4"
+          >
             <action.icon className="w-5 h-5 mr-3 flex-shrink-0" />
             <div className="text-left">
               <div className="font-medium">{action.title}</div>
@@ -47,5 +51,5 @@ export default function QuickActions() {
         ))}
       </CardContent>
     </Card>
-  )
+  );
 }

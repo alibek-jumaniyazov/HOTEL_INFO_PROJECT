@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Building, Bed, TrendingUp, Loader2, RefreshCw } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { StatsAPI } from "@/lib/api"
+import { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Building, Bed, TrendingUp, Loader2, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { StatsAPI } from "@/lib/api";
 
 export default function DashboardStats() {
   const [stats, setStats] = useState({
@@ -13,31 +13,33 @@ export default function DashboardStats() {
     occupiedRooms: 0,
     maintenanceRooms: 0,
     occupancyRate: 0,
-  })
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState("")
+  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    loadStats()
-  }, [])
+    loadStats();
+  }, []);
 
   const loadStats = async () => {
-    setIsLoading(true)
-    setError("")
+    setIsLoading(true);
+    setError("");
     try {
-      const response = await StatsAPI.getDashboardStats()
+      const response = await StatsAPI.getDashboardStats();
 
       if (response.success && response.data) {
-        setStats(response.data)
+        setStats(response.data);
       } else {
-        setError(response.error || "Statistikalarni yuklashda xatolik")
+        setError(response.error || "Statistikalarni yuklashda xatolik");
       }
     } catch (error) {
-      setError("Serverga ulanishda xatolik")
+      console.error(error);
+
+      setError("Serverga ulanishda xatolik");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const statsData = [
     {
@@ -68,7 +70,7 @@ export default function DashboardStats() {
       icon: TrendingUp,
       color: "text-purple-600",
     },
-  ]
+  ];
 
   if (error) {
     return (
@@ -79,7 +81,7 @@ export default function DashboardStats() {
           Qayta urinish
         </Button>
       </div>
-    )
+    );
   }
 
   if (isLoading) {
@@ -95,7 +97,7 @@ export default function DashboardStats() {
           </Card>
         ))}
       </div>
-    )
+    );
   }
 
   return (
@@ -112,16 +114,20 @@ export default function DashboardStats() {
         {statsData.map((stat, index) => (
           <Card key={index}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">{stat.title}</CardTitle>
+              <CardTitle className="text-sm font-medium text-gray-600">
+                {stat.title}
+              </CardTitle>
               <stat.icon className={`w-4 h-4 ${stat.color}`} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
+              <div className="text-2xl font-bold text-gray-900">
+                {stat.value}
+              </div>
               <p className="text-xs text-gray-500 mt-1">{stat.change}</p>
             </CardContent>
           </Card>
         ))}
       </div>
     </div>
-  )
+  );
 }

@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Search, Filter, Reply, Trash2, User, Clock } from "lucide-react"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Search, Filter, Reply, Trash2, User, Clock } from "lucide-react";
 
 export default function MessagesManagement() {
   const [messages] = useState([
@@ -14,7 +14,8 @@ export default function MessagesManagement() {
       name: "Aziz Karimov",
       phone: "+998 90 123 45 67",
       email: "aziz@example.com",
-      message: "Deluxe xona haqida ma'lumot kerak. Narxi qancha? Oilam bilan kelmoqchiman.",
+      message:
+        "Deluxe xona haqida ma'lumot kerak. Narxi qancha? Oilam bilan kelmoqchiman.",
       time: "2024-01-15 14:30",
       status: "new",
       priority: "high",
@@ -39,7 +40,7 @@ export default function MessagesManagement() {
       status: "new",
       priority: "low",
     },
-  ])
+  ]);
 
   return (
     <div className="space-y-6">
@@ -47,7 +48,10 @@ export default function MessagesManagement() {
         <div className="flex space-x-4">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
-            <Input placeholder="Xabarlarni qidirish..." className="pl-10 w-80" />
+            <Input
+              placeholder="Xabarlarni qidirish..."
+              className="pl-10 w-80"
+            />
           </div>
           <Button variant="outline">
             <Filter className="w-4 h-4 mr-2" />
@@ -66,14 +70,18 @@ export default function MessagesManagement() {
                     <User className="w-6 h-6 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">{message.name}</h3>
+                    <h3 className="font-semibold text-gray-900">
+                      {message.name}
+                    </h3>
                     <p className="text-sm text-gray-600">{message.phone}</p>
                     <p className="text-sm text-gray-600">{message.email}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center space-x-2">
-                  <Badge variant={message.status === "new" ? "default" : "secondary"}>
+                  <Badge
+                    variant={message.status === "new" ? "default" : "secondary"}
+                  >
                     {message.status === "new" ? "Yangi" : "Javob berilgan"}
                   </Badge>
                   <Badge
@@ -85,7 +93,11 @@ export default function MessagesManagement() {
                           : "secondary"
                     }
                   >
-                    {message.priority === "high" ? "Yuqori" : message.priority === "medium" ? "O'rta" : "Past"}
+                    {message.priority === "high"
+                      ? "Yuqori"
+                      : message.priority === "medium"
+                        ? "O'rta"
+                        : "Past"}
                   </Badge>
                   <div className="flex items-center text-xs text-gray-500">
                     <Clock className="w-3 h-3 mr-1" />
@@ -106,9 +118,13 @@ export default function MessagesManagement() {
                 <Button size="sm" variant="outline">
                   Belgilash
                 </Button>
-                <Button size="sm" variant="outline" className="text-red-600 hover:text-red-700">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="text-red-600 hover:text-red-700"
+                >
                   <Trash2 className="w-3 h-3 mr-1" />
-                  O'chirish
+                  O&rsquo;chirish
                 </Button>
               </div>
             </CardContent>
@@ -116,5 +132,5 @@ export default function MessagesManagement() {
         ))}
       </div>
     </div>
-  )
+  );
 }

@@ -1,50 +1,50 @@
-"use client"
+"use client";
 
-import type React from "react"
-import { createContext, useContext, useState, useEffect } from "react"
-import { AuthAPI } from "@/lib/api"
+import type React from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import { AuthAPI } from "@/lib/api";
 
 interface AdminContextType {
-  isAuthenticated: boolean
-  logout: () => void
-  isLoading: boolean
-  user: any
+  isAuthenticated: boolean;
+  logout: () => void;
+  isLoading: boolean;
+  user: Record<string, unknown> | null;
 }
 
-const AdminContext = createContext<AdminContextType | undefined>(undefined)
+const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 export function AdminProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
-  const [user, setUser] = useState(null)
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState<Record<string, unknown> | null>(null);
+  console.log(user);
 
   useEffect(() => {
-    // Check if user is authenticated only on client side
     const checkAuth = () => {
       if (typeof window !== "undefined") {
-        const authenticated = AuthAPI.isAuthenticated()
-        setIsAuthenticated(authenticated)
+        const authenticated = AuthAPI.isAuthenticated();
+        setIsAuthenticated(authenticated);
       }
-      setIsLoading(false)
-    }
+      setIsLoading(false);
+    };
 
-    checkAuth()
-  }, [])
+    checkAuth();
+  }, []);
 
   const logout = async () => {
     try {
-      await AuthAPI.logout()
-      setIsAuthenticated(false)
-      setUser(null)
-      window.location.href = "/admin/login"
+      await AuthAPI.logout();
+      setIsAuthenticated(false);
+      setUser(null);
+      window.location.href = "/admin/login";
     } catch (error) {
-      console.error("Logout error:", error)
+      console.error("Logout error:", error);
       // Force logout even if API call fails
-      setIsAuthenticated(false)
-      setUser(null)
-      window.location.href = "/admin/login"
+      setIsAuthenticated(false);
+      setUser(null);
+      window.location.href = "/admin/login";
     }
-  }
+  };
 
   // Show loading state during hydration
   if (isLoading) {
@@ -52,16 +52,20 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
       </div>
-    )
+    );
   }
 
-  return <AdminContext.Provider value={{ isAuthenticated, logout, isLoading, user }}>{children}</AdminContext.Provider>
+  return (
+    <AdminContext.Provider value={{ isAuthenticated, logout, isLoading, user }}>
+      {children}
+    </AdminContext.Provider>
+  );
 }
 
 export function useAdmin() {
-  const context = useContext(AdminContext)
+  const context = useContext(AdminContext);
   if (context === undefined) {
-    throw new Error("useAdmin must be used within an AdminProvider")
+    throw new Error("useAdmin must be used within an AdminProvider");
   }
-  return context
+  return context;
 }

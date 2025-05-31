@@ -1,19 +1,23 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { X, Calendar, Tag, DollarSign, ImageIcon, Edit } from "lucide-react"
-import ImageCarousel from "@/components/ui/image-carousel"
-import type { Room } from "@/lib/api"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { X, Calendar, Tag, ImageIcon, Edit } from "lucide-react";
+import ImageCarousel from "@/components/ui/image-carousel";
+import type { Room } from "@/lib/api";
 
 interface RoomDetailsProps {
-  room: Room
-  onClose: () => void
-  onEdit?: () => void
+  room: Room;
+  onClose: () => void;
+  onEdit?: () => void;
 }
 
-export default function RoomDetails({ room, onClose, onEdit }: RoomDetailsProps) {
+export default function RoomDetails({
+  room,
+  onClose,
+  onEdit,
+}: RoomDetailsProps) {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <Card className="w-full max-w-5xl max-h-[90vh] overflow-y-auto">
@@ -48,7 +52,9 @@ export default function RoomDetails({ room, onClose, onEdit }: RoomDetailsProps)
               autoPlayInterval={5000}
             />
             <div className="absolute top-4 right-4">
-              <Badge className="bg-blue-600 text-white shadow-lg">{room.category?.name || "Kategoriasiz"}</Badge>
+              <Badge className="bg-blue-600 text-white shadow-lg">
+                {room.category?.name || "Kategoriasiz"}
+              </Badge>
             </div>
           </div>
 
@@ -59,7 +65,9 @@ export default function RoomDetails({ room, onClose, onEdit }: RoomDetailsProps)
                 {/* <DollarSign className="w-6 h-6 text-green-600" /> */}
                 <div>
                   <p className="text-sm text-gray-500">Narx</p>
-                  <p className="font-bold text-lg text-green-600">{room.price} so'm/kecha</p>
+                  <p className="font-bold text-lg text-green-600">
+                    {room.price} so&rsquo;m/kecha
+                  </p>
                 </div>
               </div>
 
@@ -67,7 +75,9 @@ export default function RoomDetails({ room, onClose, onEdit }: RoomDetailsProps)
                 <Tag className="w-6 h-6 text-blue-600" />
                 <div>
                   <p className="text-sm text-gray-500">Kategoriya</p>
-                  <p className="font-semibold">{room.category?.name || "Belgilanmagan"}</p>
+                  <p className="font-semibold">
+                    {room.category?.name || "Belgilanmagan"}
+                  </p>
                 </div>
               </div>
 
@@ -75,7 +85,9 @@ export default function RoomDetails({ room, onClose, onEdit }: RoomDetailsProps)
                 <Calendar className="w-6 h-6 text-purple-600" />
                 <div>
                   <p className="text-sm text-gray-500">Yaratilgan</p>
-                  <p className="font-semibold">{new Date(room.createdAt).toLocaleDateString()}</p>
+                  <p className="font-semibold">
+                    {new Date(room.createdAt).toLocaleDateString()}
+                  </p>
                 </div>
               </div>
 
@@ -89,7 +101,9 @@ export default function RoomDetails({ room, onClose, onEdit }: RoomDetailsProps)
             </div>
 
             <div className="md:col-span-2">
-              <h3 className="font-semibold text-gray-900 mb-3 text-lg">Tavsif</h3>
+              <h3 className="font-semibold text-gray-900 mb-3 text-lg">
+                Tavsif
+              </h3>
               <div className="bg-gray-50 rounded-lg p-4">
                 <p className="text-gray-700 leading-relaxed">
                   {room.description || "Bu xona uchun tavsif mavjud emas."}
@@ -100,24 +114,33 @@ export default function RoomDetails({ room, onClose, onEdit }: RoomDetailsProps)
 
           {/* Amenities */}
           <div>
-            <h3 className="font-semibold text-gray-900 mb-4 text-lg">Qulayliklar</h3>
+            <h3 className="font-semibold text-gray-900 mb-4 text-lg">
+              Qulayliklar
+            </h3>
             {room.amenities.length > 0 ? (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                 {room.amenities.map((amenity, index) => (
-                  <div key={index} className="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg">
+                  <div
+                    key={index}
+                    className="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg"
+                  >
                     <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
                     <span className="text-sm font-medium">{amenity}</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500 bg-gray-50 p-4 rounded-lg">Qulayliklar haqida ma'lumot mavjud emas.</p>
+              <p className="text-gray-500 bg-gray-50 p-4 rounded-lg">
+                Qulayliklar haqida ma&rsquo;lumot mavjud emas.
+              </p>
             )}
           </div>
 
           {/* Technical Info */}
           <div className="bg-gray-50 rounded-lg p-6">
-            <h3 className="font-semibold text-gray-900 mb-4 text-lg">Texnik Ma'lumotlar</h3>
+            <h3 className="font-semibold text-gray-900 mb-4 text-lg">
+              Texnik Ma&rsquo;lumotlar
+            </h3>
             <div className="grid md:grid-cols-2 gap-4 text-sm">
               <div className="space-y-2">
                 <div className="flex justify-between">
@@ -126,17 +149,23 @@ export default function RoomDetails({ room, onClose, onEdit }: RoomDetailsProps)
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Kategoriya ID:</span>
-                  <span className="font-mono font-medium">{room.categoryId}</span>
+                  <span className="font-mono font-medium">
+                    {room.categoryId}
+                  </span>
                 </div>
               </div>
               <div className="space-y-2">
                 <div className="flex justify-between">
                   <span className="text-gray-500">Yaratilgan:</span>
-                  <span className="font-medium">{new Date(room.createdAt).toLocaleString()}</span>
+                  <span className="font-medium">
+                    {new Date(room.createdAt).toLocaleString()}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Yangilangan:</span>
-                  <span className="font-medium">{new Date(room.updatedAt).toLocaleString()}</span>
+                  <span className="font-medium">
+                    {new Date(room.updatedAt).toLocaleString()}
+                  </span>
                 </div>
               </div>
             </div>
@@ -145,7 +174,10 @@ export default function RoomDetails({ room, onClose, onEdit }: RoomDetailsProps)
           {/* Actions */}
           <div className="flex justify-end space-x-4 pt-4 border-t">
             {onEdit && (
-              <Button onClick={onEdit} className="bg-blue-600 hover:bg-blue-700">
+              <Button
+                onClick={onEdit}
+                className="bg-blue-600 hover:bg-blue-700"
+              >
                 <Edit className="w-4 h-4 mr-2" />
                 Tahrirlash
               </Button>
@@ -157,5 +189,5 @@ export default function RoomDetails({ room, onClose, onEdit }: RoomDetailsProps)
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

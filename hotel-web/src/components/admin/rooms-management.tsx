@@ -69,6 +69,7 @@ export default function RoomsManagement() {
         alert("Xatolik: " + (response.error || "Xonani o'chirishda xatolik"));
       }
     } catch (error) {
+      console.error(error);
       alert("Serverga ulanishda xatolik");
     }
   };
@@ -103,7 +104,7 @@ export default function RoomsManagement() {
     (room) =>
       room.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       room.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      room.category?.name.toLowerCase().includes(searchTerm.toLowerCase())
+      room.category?.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   if (error) {
@@ -192,7 +193,7 @@ export default function RoomsManagement() {
                     <div className="text-xl font-bold text-blue-600">
                       {room.price}
                     </div>
-                    <div className="text-xs text-gray-500">so'm/kecha</div>
+                    <div className="text-xs text-gray-500">so&lsquo;m/kecha</div>
                   </div>
                 </div>
 
@@ -244,7 +245,7 @@ export default function RoomsManagement() {
                     onClick={() => handleView(room)}
                   >
                     <Eye className="w-3 h-3 mr-1" />
-                    Ko'rish
+                    Ko&lsquo;rish
                   </Button>
                   <Button
                     size="sm"
@@ -288,7 +289,7 @@ export default function RoomsManagement() {
               className="bg-blue-600 hover:bg-blue-700"
             >
               <Plus className="w-4 h-4 mr-2" />
-              Yangi Xona Qo'shish
+              Yangi Xona Qo&lsquo;shish
             </Button>
           )}
         </div>

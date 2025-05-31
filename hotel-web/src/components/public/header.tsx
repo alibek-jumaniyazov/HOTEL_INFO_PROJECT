@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Menu, X, Phone } from "lucide-react"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Menu, X, Phone } from "lucide-react";
 
 export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
     { name: "Bosh sahifa", href: "#home" },
@@ -13,7 +13,7 @@ export default function Header() {
     { name: "Xonalar", href: "#rooms" },
     { name: "Video", href: "#video" },
     { name: "Aloqa", href: "#contact" },
-  ]
+  ];
 
   return (
     <header className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 z-50">
@@ -24,7 +24,9 @@ export default function Header() {
             <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-xl">H</span>
             </div>
-            <span className="text-xl font-bold text-gray-900">Luxury Hotel</span>
+            <span className="text-xl font-bold text-gray-900">
+              Luxury Hotel
+            </span>
           </div>
 
           {/* Desktop Navigation */}
@@ -50,8 +52,15 @@ export default function Header() {
           </div>
 
           {/* Mobile menu button */}
-          <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          <button
+            className="md:hidden"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            {isMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
         </div>
 
@@ -70,12 +79,14 @@ export default function Header() {
                 </a>
               ))}
               <div className="pt-4 border-t border-gray-200">
-                <Button className="w-full bg-blue-600 hover:bg-blue-700">Aloqa</Button>
+                <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                  Aloqa
+                </Button>
               </div>
             </nav>
           </div>
         )}
       </div>
     </header>
-  )
+  );
 }

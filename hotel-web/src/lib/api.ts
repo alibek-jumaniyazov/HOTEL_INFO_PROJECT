@@ -51,7 +51,7 @@ export interface Category {
   updatedAt: string;
 }
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   data?: T;
   total?: number;
   page?: number;
@@ -77,7 +77,7 @@ export interface CreateCategoryData {
   name: string;
 }
 
-export interface UpdateCategoryData extends Partial<CreateCategoryData> {}
+export type UpdateCategoryData = Partial<CreateCategoryData>;
 
 // Token Management
 class TokenManager {
@@ -130,9 +130,9 @@ export class ApiClient {
     options: RequestInit = {}
   ): Promise<T> {
     const url = `${API_BASE_URL}${endpoint}`;
-    let token = TokenManager.getToken();
+    const token = TokenManager.getToken();
 
-    let headers: Record<string, string> = {
+    const headers: Record<string, string> = {
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     };
 
@@ -140,7 +140,7 @@ export class ApiClient {
       headers["Content-Type"] = "application/json";
     }
 
-    let config: RequestInit = {
+    const config: RequestInit = {
       ...options,
       headers: {
         ...headers,
@@ -231,15 +231,15 @@ export class ApiClient {
     return this.request<T>(endpoint, { method: "GET" });
   }
 
-  static async post<T>(
+  static async post<T, D = unknown>(
     endpoint: string,
-    data?: any,
+    data?: D,
     isFormData = false
   ): Promise<T> {
     if (isFormData) {
       return this.request<T>(endpoint, {
         method: "POST",
-        body: data,
+        body: data as unknown as FormData,
       });
     }
     return this.request<T>(endpoint, {
@@ -248,15 +248,15 @@ export class ApiClient {
     });
   }
 
-  static async patch<T>(
+  static async patch<T, D = unknown>(
     endpoint: string,
-    data?: any,
+    data?: D,
     isFormData = false
   ): Promise<T> {
     if (isFormData) {
       return this.request<T>(endpoint, {
         method: "PATCH",
-        body: data,
+        body: data as unknown as FormData,
       });
     }
     return this.request<T>(endpoint, {
@@ -339,11 +339,18 @@ export class CategoriesAPI {
         success: true,
         data: response.data || [],
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Failed to fetch categories:", error);
+        return {
+          success: false,
+          error: "Kategoriyalarni yuklashda xatolik",
+        };
+      }
       console.error("Failed to fetch categories:", error);
       return {
         success: false,
-        error: error.message || "Kategoriyalarni yuklashda xatolik",
+        error: "Kategoriyalarni yuklashda noma'lum xatolik yuz berdi",
       };
     }
   }
@@ -357,11 +364,11 @@ export class CategoriesAPI {
         success: true,
         data: response,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to fetch category:", error);
       return {
         success: false,
-        error: error.message || "Kategoriyani yuklashda xatolik",
+        error: "Kategoriyani yuklashda xatolik",
       };
     }
   }
@@ -378,11 +385,11 @@ export class CategoriesAPI {
         success: true,
         data: response,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to create category:", error);
       return {
         success: false,
-        error: error.message || "Kategoriya yaratishda xatolik",
+        error: "Kategoriya yaratishda xatolik",
       };
     }
   }
@@ -400,11 +407,11 @@ export class CategoriesAPI {
         success: true,
         data: response,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to update category:", error);
       return {
         success: false,
-        error: error.message || "Kategoriyani yangilashda xatolik",
+        error: "Kategoriyani yangilashda xatolik",
       };
     }
   }
@@ -415,11 +422,11 @@ export class CategoriesAPI {
     try {
       await ApiClient.delete(`/category/${id}`);
       return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to delete category:", error);
       return {
         success: false,
-        error: error.message || "Kategoriyani o'chirishda xatolik",
+        error: "Kategoriyani o'chirishda xatolik",
       };
     }
   }
@@ -438,11 +445,11 @@ export class RoomsAPI {
         success: true,
         data: response.data || [],
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to fetch rooms:", error);
       return {
         success: false,
-        error: error.message || "Xonalarni yuklashda xatolik",
+        error: "Xonalarni yuklashda xatolik",
       };
     }
   }
@@ -458,12 +465,11 @@ export class RoomsAPI {
         success: true,
         data: response.data || [],
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to fetch rooms by category:", error);
       return {
         success: false,
-        error:
-          error.message || "Kategoriyaga ko'ra xonalarni yuklashda xatolik",
+        error: "Kategoriyaga ko'ra xonalarni yuklashda xatolik",
       };
     }
   }
@@ -477,11 +483,11 @@ export class RoomsAPI {
         success: true,
         data: response,
       };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to fetch room:", error);
       return {
         success: false,
-        error: error.message || "Xonani yuklashda xatolik",
+        error: "Xonani yuklashda xatolik",
       };
     }
   }
@@ -490,55 +496,39 @@ export class RoomsAPI {
     roomData: CreateRoomData
   ): Promise<{ success: boolean; data?: Room; error?: string }> {
     try {
-      // Handle file uploads with FormData
       if (roomData.files && roomData.files.length > 0) {
         const formData = new FormData();
-
-        // Add text fields
         formData.append("title", roomData.title);
         formData.append("description", roomData.description);
         formData.append("price", roomData.price);
         formData.append("categoryId", roomData.categoryId.toString());
         formData.append("amenities", JSON.stringify(roomData.amenities));
-
-        // Add files
-        roomData.files.forEach((file) => {
-          formData.append("files", file);
-        });
+        roomData.files.forEach((file) => formData.append("files", file));
 
         const response = await ApiClient.post<Room>("/rooms", formData, true);
-        return {
-          success: true,
-          data: response,
-        };
+        return { success: true, data: response };
       } else {
-        // No files, use regular JSON
-        const { files, ...dataWithoutFiles } = roomData;
+        // files ishlatilmayapti, shuning uchun olib tashladik:
+        const dataWithoutFiles = { ...roomData };
+        delete (dataWithoutFiles).files; // agar files bor bo'lsa, o'chiramiz
+
         const response = await ApiClient.post<Room>("/rooms", dataWithoutFiles);
-        return {
-          success: true,
-          data: response,
-        };
+        return { success: true, data: response };
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to create room:", error);
-      return {
-        success: false,
-        error: error.message || "Xona yaratishda xatolik",
-      };
+      return { success: false, error: "Xona yaratishda xatolik" };
     }
   }
 
+  // 2. updateRoom ichida ham xuddi shu tarzda:
   static async updateRoom(
     id: number,
     roomData: UpdateRoomData
   ): Promise<{ success: boolean; data?: Room; error?: string }> {
     try {
-      // Handle file uploads with FormData
       if (roomData.files && roomData.files.length > 0) {
         const formData = new FormData();
-
-        // Add text fields if they exist
         if (roomData.title) formData.append("title", roomData.title);
         if (roomData.description)
           formData.append("description", roomData.description);
@@ -547,61 +537,46 @@ export class RoomsAPI {
           formData.append("categoryId", roomData.categoryId.toString());
         if (roomData.amenities)
           formData.append("amenities", JSON.stringify(roomData.amenities));
-
-        // Add deleteImages if provided
         if (roomData.deleteImages && roomData.deleteImages.length > 0) {
           formData.append(
             "deleteImages",
             JSON.stringify(roomData.deleteImages)
           );
         }
-
-        // Add files
-        roomData.files.forEach((file) => {
-          formData.append("files", file);
-        });
+        roomData.files.forEach((file) => formData.append("files", file));
 
         const response = await ApiClient.patch<Room>(
           `/rooms/${id}`,
           formData,
           true
         );
-        return {
-          success: true,
-          data: response,
-        };
+        return { success: true, data: response };
       } else {
-        // No files, use regular JSON
-        const { files, ...dataWithoutFiles } = roomData;
+        const dataWithoutFiles = { ...roomData };
+        delete (dataWithoutFiles).files;
+
         const response = await ApiClient.patch<Room>(
           `/rooms/${id}`,
           dataWithoutFiles
         );
-        return {
-          success: true,
-          data: response,
-        };
+        return { success: true, data: response };
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to update room:", error);
-      return {
-        success: false,
-        error: error.message || "Xonani yangilashda xatolik",
-      };
+      return { success: false, error: "Xonani yangilashda xatolik" };
     }
   }
-
   static async deleteRoom(
     id: number
   ): Promise<{ success: boolean; error?: string }> {
     try {
       await ApiClient.delete(`/rooms/${id}`);
       return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Failed to delete room:", error);
       return {
         success: false,
-        error: error.message || "Xonani o'chirishda xatolik",
+        error: "Xonani o'chirishda xatolik",
       };
     }
   }
@@ -640,19 +615,20 @@ export class HotelAPI {
     };
   }
 
-  static async updateHotelInfo(data: any) {
-    await new Promise((resolve) => setTimeout(resolve, 300));
-    this.hotelData = {
-      ...this.hotelData,
-      ...data,
-      updatedAt: new Date().toISOString(),
-    };
-    return {
-      success: true,
-      data: this.hotelData,
-      message: "Hotel ma'lumotlari muvaffaqiyatli yangilandi",
-    };
-  }
+  // static async updateHotelInfo(data: any) {
+  //   await new Promise((resolve) => setTimeout(resolve, 300));
+  //   console.log("Updating hotel data:", data);
+  //   this.hotelData = {
+  //     ...this.hotelData,
+  //     ...data,
+  //     updatedAt: new Date().toISOString(),
+  //   };
+  //   return {
+  //     success: true,
+  //     data: this.hotelData,
+  //     message: "Hotel ma'lumotlari muvaffaqiyatli yangilandi",
+  //   };
+  // }
 }
 
 // Statistics API (using real rooms data)

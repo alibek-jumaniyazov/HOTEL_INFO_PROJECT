@@ -1,7 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { MessageSquare, Clock, User } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { MessageSquare, Clock, User } from "lucide-react";
 
 export default function RecentMessages() {
   const messages = [
@@ -29,19 +28,22 @@ export default function RecentMessages() {
       time: "1 kun oldin",
       status: "new",
     },
-  ]
+  ];
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
           <MessageSquare className="w-5 h-5" />
-          <span>So'nggi Xabarlar</span>
+          <span>So&lsquo;nggi Xabarlar</span>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {messages.map((message) => (
-          <div key={message.id} className="border border-gray-200 rounded-lg p-4">
+          <div
+            key={message.id}
+            className="border border-gray-200 rounded-lg p-4"
+          >
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -53,7 +55,9 @@ export default function RecentMessages() {
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                <Badge variant={message.status === "new" ? "default" : "secondary"}>
+                <Badge
+                  variant={message.status === "new" ? "default" : "secondary"}
+                >
                   {message.status === "new" ? "Yangi" : "Javob berilgan"}
                 </Badge>
                 <div className="flex items-center text-xs text-gray-500">
@@ -75,5 +79,5 @@ export default function RecentMessages() {
         ))}
       </CardContent>
     </Card>
-  )
+  );
 }

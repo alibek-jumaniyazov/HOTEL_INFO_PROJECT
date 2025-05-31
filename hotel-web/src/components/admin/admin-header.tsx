@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Bell, Search, Settings, LogOut, User, Home } from "lucide-react"
-import { useAdmin } from "./admin-provider"
-import Link from "next/link"
+import { Button } from "@/components/ui/button";
+import { Search, LogOut, User, Home } from "lucide-react";
+import { useAdmin } from "./admin-provider";
+import Link from "next/link";
 
 export default function AdminHeader() {
-  const { logout } = useAdmin()
+  const { logout } = useAdmin();
 
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4">
@@ -29,7 +29,6 @@ export default function AdminHeader() {
             </Button>
           </Link>
 
-   
           <div className="flex items-center space-x-3 pl-4 border-l border-gray-200">
             <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
               <User className="w-4 h-4 text-white" />
@@ -38,12 +37,17 @@ export default function AdminHeader() {
               <p className="text-sm font-medium text-gray-900">Admin</p>
               <p className="text-xs text-gray-500">Administrator</p>
             </div>
-            <Button variant="ghost" size="icon" onClick={logout} title="Chiqish">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={logout}
+              title="Chiqish"
+            >
               <LogOut className="w-4 h-4" />
             </Button>
           </div>
         </div>
       </div>
     </header>
-  )
+  );
 }

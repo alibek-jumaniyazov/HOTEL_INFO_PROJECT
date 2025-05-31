@@ -91,7 +91,6 @@ export default function SimpleImage({
       )}
 
       <Image
-        width={200}
         src={imageUrl || "/placeholder.svg"}
         alt={alt}
         width="100%"

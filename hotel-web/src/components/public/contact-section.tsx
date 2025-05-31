@@ -36,11 +36,12 @@ export default function ContactSection() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ chat_id: chatId, text: message }),
-        }
+        },
       );
       alert("Xabaringiz muvaffaqiyatli yuborildi!");
       setFormData({ name: "", phone: "", message: "" });
     } catch (error) {
+      console.error(error);
       alert("Xatolik yuz berdi. Iltimos qaytadan urinib ko'ring.");
     } finally {
       setIsSubmitting(false);
@@ -79,11 +80,11 @@ export default function ContactSection() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            Biz bilan bog'laning
+            Biz bilan bog&lsquo;laning
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Savollaringiz bormi? Bron qilishda yordam kerakmi? Biz bilan
-            bog'laning va professional maslahat oling.
+            bog&lsquo;laning va professional maslahat oling.
           </p>
         </div>
 
@@ -139,11 +140,11 @@ export default function ContactSection() {
             <Card className="shadow-xl">
               <CardHeader>
                 <CardTitle className="text-2xl font-bold text-gray-900">
-                  Ma'lumot so'rash
+                  Ma&rsquo;lumot so&rsquo;rash
                 </CardTitle>
                 <p className="text-gray-600">
-                  Xonalar, narxlar va xizmatlar haqida ma'lumot olish uchun
-                  formani to'ldiring.
+                  Xonalar, narxlar va xizmatlar haqida ma&rsquo;lumot olish
+                  uchun formani to&rsquo;ldiring.
                 </p>
               </CardHeader>
               <CardContent>
@@ -226,9 +227,9 @@ export default function ContactSection() {
 
                 <div className="mt-6 p-4 bg-blue-50 rounded-lg">
                   <p className="text-sm text-blue-800">
-                    <strong>Eslatma:</strong> Xabaringiz bo'yicha kun davomida
-                    sizga aloqaga chiqamiz. Iltimos, telefon raqamingizni
-                    to'g'ri kiriting.
+                    <strong>Eslatma:</strong> Xabaringiz bo&rsquo;yicha kun
+                    davomida sizga aloqaga chiqamiz. Iltimos, telefon
+                    raqamingizni to&rsquo;g&lsquo;ri kiriting.
                   </p>
                 </div>
               </CardContent>

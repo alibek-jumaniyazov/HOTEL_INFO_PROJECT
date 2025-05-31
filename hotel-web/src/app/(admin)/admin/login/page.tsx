@@ -10,8 +10,6 @@ import { Lock, User, Eye, EyeOff, Home, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { AuthAPI, type LoginCredentials } from "@/lib/api";
 
-const API_BASE_URL = "http://localhost:3001/api";
-
 export default function AdminLogin() {
   const [credentials, setCredentials] = useState<LoginCredentials>({
     name: "",
@@ -46,6 +44,7 @@ export default function AdminLogin() {
         setError(response.error || "Login jarayonida xatolik yuz berdi");
       }
     } catch (error) {
+      console.log(error);
       setError("Serverga ulanishda xatolik yuz berdi");
     } finally {
       setIsLoading(false);

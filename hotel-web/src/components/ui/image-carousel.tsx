@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import SimpleImage from "./simple-image";
@@ -44,13 +44,13 @@ export default function ImageCarousel({
     return () => clearInterval(interval);
   }, [autoPlay, autoPlayInterval, isHovered, images.length]);
 
-  const goToPrevious = () => {
+  const goToPrevious = useCallback(() => {
     setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
-  };
+  }, [images.length]);
 
-  const goToNext = () => {
+  const goToNext = useCallback(() => {
     setCurrentIndex((prev) => (prev + 1) % images.length);
-  };
+  }, [images.length]);
 
   const goToSlide = (index: number) => {
     setCurrentIndex(index);
@@ -70,7 +70,7 @@ export default function ImageCarousel({
       window.addEventListener("keydown", handleKeyDown);
       return () => window.removeEventListener("keydown", handleKeyDown);
     }
-  }, [isHovered]);
+  }, [isHovered, goToNext, goToPrevious]);
 
   // Touch handlers
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -87,10 +87,8 @@ export default function ImageCarousel({
 
     if (Math.abs(deltaX) > 50) {
       if (deltaX > 0) {
-        // Swipe left => next image
         goToNext();
       } else {
-        // Swipe right => previous image
         goToPrevious();
       }
     }

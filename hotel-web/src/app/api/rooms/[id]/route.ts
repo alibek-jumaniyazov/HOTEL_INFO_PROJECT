@@ -54,7 +54,7 @@ const rooms = [
 // GET - Bitta xonani olish
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     const roomId = Number.parseInt(params.id);
@@ -66,7 +66,7 @@ export async function GET(
           success: false,
           error: "Xona topilmadi",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -75,12 +75,14 @@ export async function GET(
       data: room,
     });
   } catch (error) {
+    console.error(error);
+    console.error(error);
     return NextResponse.json(
       {
         success: false,
         error: "Xonani olishda xatolik",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -88,7 +90,7 @@ export async function GET(
 // PUT - Xonani yangilash
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     const roomId = Number.parseInt(params.id);
@@ -102,7 +104,7 @@ export async function PUT(
           success: false,
           error: "Xona topilmadi",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -119,12 +121,13 @@ export async function PUT(
       message: "Xona muvaffaqiyatli yangilandi",
     });
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       {
         success: false,
         error: "Xonani yangilashda xatolik",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -132,7 +135,7 @@ export async function PUT(
 // DELETE - Xonani o'chirish
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     const roomId = Number.parseInt(params.id);
@@ -144,7 +147,7 @@ export async function DELETE(
           success: false,
           error: "Xona topilmadi",
         },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -157,12 +160,13 @@ export async function DELETE(
       message: "Xona muvaffaqiyatli o'chirildi",
     });
   } catch (error) {
+    console.error(error);
     return NextResponse.json(
       {
         success: false,
         error: "Xonani o'chirishda xatolik",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

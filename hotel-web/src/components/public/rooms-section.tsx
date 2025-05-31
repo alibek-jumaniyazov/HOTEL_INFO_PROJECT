@@ -9,7 +9,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, RefreshCw, ImageIcon } from "lucide-react";
+import { RefreshCw, ImageIcon } from "lucide-react";
 import ImageCarousel from "@/components/ui/image-carousel";
 import { CategoriesAPI, Category, RoomsAPI, type Room } from "@/lib/api";
 
@@ -42,6 +42,7 @@ export default function RoomsSection() {
         setError("Kategoriyalarni yuklashda xatolik");
       }
     } catch (err) {
+      console.log(err);
       setError("Serverga ulanishda xatolik");
     } finally {
       setIsLoading(false);
@@ -184,7 +185,9 @@ export default function RoomsSection() {
                     <div className="text-2xl font-bold text-blue-600">
                       {room.price}
                     </div>
-                    <div className="text-sm text-gray-500">so'm/kecha</div>
+                    <div className="text-sm text-gray-500">
+                      so&rsquo;m/kecha
+                    </div>
                   </div>
                 </div>
 
@@ -214,7 +217,7 @@ export default function RoomsSection() {
                   className="w-full bg-blue-600 hover:bg-blue-700"
                   onClick={scrollToContact}
                 >
-                  Ma'lumot olish
+                  Ma&rsquo;lumot olish
                 </Button>
               </CardFooter>
             </Card>

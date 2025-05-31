@@ -10,7 +10,6 @@ import {
   Twitter,
   Youtube,
   Star,
-  Heart,
 } from "lucide-react";
 
 export default function Footer() {
@@ -22,16 +21,16 @@ export default function Footer() {
     { name: "Aloqa", href: "#contact" },
   ];
 
-  const services = [
-    "Xona xizmati",
-    "Spa va wellness",
-    "Fitnes markaz",
-    "Biznes markaz",
-    "Konferens zallari",
-    "Restaurant",
-    "Bar va lounge",
-    "Concierge xizmati",
-  ];
+  // const services = [
+  //   "Xona xizmati",
+  //   "Spa va wellness",
+  //   "Fitnes markaz",
+  //   "Biznes markaz",
+  //   "Konferens zallari",
+  //   "Restaurant",
+  //   "Bar va lounge",
+  //   "Concierge xizmati",
+  // ];
 
   const socialLinks = [
     { icon: Facebook, href: "#", name: "Facebook" },
@@ -47,11 +46,11 @@ export default function Footer() {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h3 className="text-2xl md:text-3xl font-bold mb-4">
-              Maxsus takliflardan xabardor bo'ling
+              Maxsus takliflardan xabardor bo&rsquo;ling
             </h3>
             <p className="text-blue-100 mb-8 text-lg">
               Yangi takliflar, chegirmalar va hotel yangiliklari haqida birinchi
-              bo'lib bilib oling
+              bo&rsquo;lib bilib oling
             </p>
             <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
               <Input
@@ -60,7 +59,7 @@ export default function Footer() {
                 className="flex-1 bg-white text-gray-900"
               />
               <Button className="bg-gray-900 hover:bg-gray-800 text-white">
-                Obuna bo'lish
+                Obuna bo&rsquo;lish
               </Button>
             </div>
           </div>
@@ -143,16 +142,17 @@ export default function Footer() {
               </ul>
             </div> */}
 
-
             {/* Contact info */}
-            <div >
-              <h4 className="text-lg font-semibold mb-6">Aloqa ma'lumotlari</h4>
+            <div>
+              <h4 className="text-lg font-semibold mb-6">
+                Aloqa ma&rsquo;lumotlari
+              </h4>
               <div className="space-y-4">
                 <div className="flex items-start space-x-3">
                   <MapPin className="w-5 h-5 text-blue-400 mt-1 flex-shrink-0" />
                   <div>
                     <p className="text-gray-300">
-                      Toshkent, Amir Temur ko'chasi 15
+                      Toshkent, Amir Temur ko&rsquo;chasi 15
                     </p>
                     <p className="text-sm text-gray-400">Chilonzor tumani</p>
                   </div>
@@ -163,7 +163,7 @@ export default function Footer() {
                   <div>
                     <p className="text-gray-300">+998 90 123 45 67</p>
                     <p className="text-sm text-gray-400">
-                      24/7 qo'llab-quvvatlash
+                      24/7 qo&rsquo;llab-quvvatlash
                     </p>
                   </div>
                 </div>
@@ -198,7 +198,6 @@ export default function Footer() {
                 ))}
               </ul> */}
             </div>
-
           </div>
         </div>
       </div>
@@ -213,12 +212,9 @@ export default function Footer() {
               © 2025 Luxury Hotel. Barcha huquqlar himoyalangan.
             </div>
 
-            <div className="flex items-center space-x-1 text-sm text-gray-400">
-              
-            </div>
+            <div className="flex items-center space-x-1 text-sm text-gray-400"></div>
 
             <div className="flex space-x-6 text-sm">
-          
               <a
                 href="#"
                 className="text-gray-400 hover:text-white transition-colors"

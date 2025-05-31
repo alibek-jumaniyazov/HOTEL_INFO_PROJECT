@@ -1,14 +1,10 @@
-import AdminHeader from "@/components/admin/admin-header"
-import AdminSidebar from "@/components/admin/admin-sidebar"
-import DashboardStats from "@/components/admin/dashboard-stats"
-import RecentMessages from "@/components/admin/recent-messages"
-import QuickActions from "@/components/admin/quick-actions"
+import AdminSidebar from "@/components/admin/admin-sidebar";
 
 export default function AdminDashboard() {
   return (
     <div className="flex h-screen bg-gray-50">
       <AdminSidebar />
-{/* 
+      {/* 
       <div className="flex-1 flex flex-col overflow-hidden">
         <AdminHeader />
 
@@ -33,5 +29,5 @@ export default function AdminDashboard() {
         </main>
       </div> */}
     </div>
-  )
+  );
 }

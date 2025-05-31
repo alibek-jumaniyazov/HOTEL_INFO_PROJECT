@@ -66,8 +66,9 @@ export default function HotelInfo() {
               </p>
               <p className="text-lg text-gray-600 leading-relaxed">
                 Bizning professional jamoa har bir mehmonning ehtiyojlarini
-                qondirish uchun 24/7 xizmat ko'rsatadi. Zamonaviy qulayliklar va
-                an'anaviy mehmondo'stlik bizning asosiy tamoyillarimizdir.
+                qondirish uchun 24/7 xizmat ko&rsquo;rsatadi. Zamonaviy
+                qulayliklar va an&rsquo;anaviy mehmondo&rsquo;stlik bizning
+                asosiy tamoyillarimizdir.
               </p>
             </div>
 

@@ -1,15 +1,16 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { ImageIcon, AlertCircle } from "lucide-react"
+import { useState } from "react";
+import { ImageIcon, AlertCircle } from "lucide-react";
+import Image from "next/image";
 
 interface ImagePlaceholderProps {
-  src?: string
-  alt: string
-  width?: number
-  height?: number
-  className?: string
-  aspectRatio?: "square" | "video" | "auto"
+  src?: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  className?: string;
+  aspectRatio?: "square" | "video" | "auto";
 }
 
 export default function ImagePlaceholder({
@@ -20,8 +21,8 @@ export default function ImagePlaceholder({
   className = "",
   aspectRatio = "auto",
 }: ImagePlaceholderProps) {
-  const [imageError, setImageError] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+  const [imageError, setImageError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Create inline SVG placeholder
   const createPlaceholderSVG = (w: number, h: number) => {
@@ -38,48 +39,52 @@ export default function ImagePlaceholder({
         ${w} × ${h}
       </text>
     </svg>
-  `
-    return `data:image/svg+xml;base64,${btoa(svg)}`
-  }
+  `;
+    return `data:image/svg+xml;base64,${btoa(svg)}`;
+  };
 
   const getAspectRatioClass = () => {
     switch (aspectRatio) {
       case "square":
-        return "aspect-square"
+        return "aspect-square";
       case "video":
-        return "aspect-video"
+        return "aspect-video";
       default:
-        return ""
+        return "";
     }
-  }
+  };
 
   const handleImageLoad = () => {
-    setIsLoading(false)
-    setImageError(false)
-  }
+    setIsLoading(false);
+    setImageError(false);
+  };
 
   const handleImageError = () => {
-    setIsLoading(false)
-    setImageError(true)
-  }
+    setIsLoading(false);
+    setImageError(true);
+  };
 
   // If no src provided or error occurred, show placeholder
   if (!src || imageError) {
-    const placeholderSrc = createPlaceholderSVG(width, height)
+    const placeholderSrc = createPlaceholderSVG(width, height);
     return (
-      <div className={`relative overflow-hidden ${getAspectRatioClass()} ${className}`}>
-        <img
+      <div
+        className={`relative overflow-hidden ${getAspectRatioClass()} ${className}`}
+      >
+        <Image
           src={placeholderSrc || "/placeholder.png"}
           alt={alt}
           className="w-full h-full object-cover"
           loading="lazy"
         />
       </div>
-    )
+    );
   }
 
   return (
-    <div className={`relative overflow-hidden ${getAspectRatioClass()} ${className}`}>
+    <div
+      className={`relative overflow-hidden ${getAspectRatioClass()} ${className}`}
+    >
       {isLoading && (
         <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
           <div className="animate-pulse">
@@ -87,7 +92,7 @@ export default function ImagePlaceholder({
           </div>
         </div>
       )}
-      <img
+      <Image
         src={src || "/placeholder.png"}
         alt={alt}
         className={`w-full h-full object-cover transition-opacity duration-300 ${isLoading ? "opacity-0" : "opacity-100"}`}
@@ -104,5 +109,5 @@ export default function ImagePlaceholder({
         </div>
       )}
     </div>
-  )
+  );
 }

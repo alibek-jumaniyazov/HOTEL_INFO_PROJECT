@@ -1,123 +1,150 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Plus, Edit, Trash2, Search, Loader2, RefreshCw, Save, X } from "lucide-react"
-import { CategoriesAPI, type Category, type CreateCategoryData } from "@/lib/api"
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Plus,
+  Edit,
+  Trash2,
+  Search,
+  Loader2,
+  RefreshCw,
+  Save,
+  X,
+} from "lucide-react";
+import {
+  CategoriesAPI,
+  type Category,
+  type CreateCategoryData,
+} from "@/lib/api";
 
 export default function CategoriesManagement() {
-  const [categories, setCategories] = useState<Category[]>([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [isFormOpen, setIsFormOpen] = useState(false)
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null)
-  const [formData, setFormData] = useState<CreateCategoryData>({ name: "" })
-  const [isSaving, setIsSaving] = useState(false)
-  const [error, setError] = useState("")
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+  const [formData, setFormData] = useState<CreateCategoryData>({ name: "" });
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    loadCategories()
-  }, [])
+    loadCategories();
+  }, []);
 
   const loadCategories = async () => {
-    setIsLoading(true)
-    setError("")
+    setIsLoading(true);
+    setError("");
     try {
-      const response = await CategoriesAPI.getAllCategories()
+      const response = await CategoriesAPI.getAllCategories();
 
       if (response.success && response.data) {
-        setCategories(response.data)
+        setCategories(response.data);
       } else {
-        setError(response.error || "Kategoriyalarni yuklashda xatolik")
+        setError(response.error || "Kategoriyalarni yuklashda xatolik");
       }
     } catch (error) {
-      setError("Serverga ulanishda xatolik")
+      console.error(error);
+      setError("Serverga ulanishda xatolik");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleDelete = async (categoryId: number) => {
     if (!confirm("Haqiqatan ham bu kategoriyani o'chirmoqchimisiz?")) {
-      return
+      return;
     }
 
     try {
-      const response = await CategoriesAPI.deleteCategory(categoryId)
+      const response = await CategoriesAPI.deleteCategory(categoryId);
 
       if (response.success) {
-        setCategories(categories.filter((category) => category.id !== categoryId))
-        alert("Kategoriya muvaffaqiyatli o'chirildi")
+        setCategories(
+          categories.filter((category) => category.id !== categoryId),
+        );
+        alert("Kategoriya muvaffaqiyatli o'chirildi");
       } else {
-        alert("Xatolik: " + (response.error || "Kategoriyani o'chirishda xatolik"))
+        alert(
+          "Xatolik: " + (response.error || "Kategoriyani o'chirishda xatolik"),
+        );
       }
     } catch (error) {
-      alert("Serverga ulanishda xatolik")
+      console.error(error);
+      alert("Serverga ulanishda xatolik");
     }
-  }
+  };
 
   const handleEdit = (category: Category) => {
-    setEditingCategory(category)
-    setFormData({ name: category.name })
-    setIsFormOpen(true)
-  }
+    setEditingCategory(category);
+    setFormData({ name: category.name });
+    setIsFormOpen(true);
+  };
 
   const handleAddNew = () => {
-    setEditingCategory(null)
-    setFormData({ name: "" })
-    setIsFormOpen(true)
-  }
+    setEditingCategory(null);
+    setFormData({ name: "" });
+    setIsFormOpen(true);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSaving(true)
-    setError("")
+    e.preventDefault();
+    setIsSaving(true);
+    setError("");
 
     if (!formData.name.trim()) {
-      setError("Kategoriya nomi majburiy")
-      setIsSaving(false)
-      return
+      setError("Kategoriya nomi majburiy");
+      setIsSaving(false);
+      return;
     }
 
     try {
-      let response
+      let response;
 
       if (editingCategory) {
-        response = await CategoriesAPI.updateCategory(editingCategory.id, formData)
+        response = await CategoriesAPI.updateCategory(
+          editingCategory.id,
+          formData,
+        );
       } else {
-        response = await CategoriesAPI.createCategory(formData)
+        response = await CategoriesAPI.createCategory(formData);
       }
 
       if (response.success) {
-        alert(editingCategory ? "Kategoriya muvaffaqiyatli yangilandi!" : "Yangi kategoriya muvaffaqiyatli qo'shildi!")
-        setIsFormOpen(false)
-        setEditingCategory(null)
-        setFormData({ name: "" })
-        loadCategories()
+        alert(
+          editingCategory
+            ? "Kategoriya muvaffaqiyatli yangilandi!"
+            : "Yangi kategoriya muvaffaqiyatli qo'shildi!",
+        );
+        setIsFormOpen(false);
+        setEditingCategory(null);
+        setFormData({ name: "" });
+        loadCategories();
       } else {
-        setError(response.error || "Ma'lumotlarni saqlashda xatolik")
+        setError(response.error || "Ma'lumotlarni saqlashda xatolik");
       }
     } catch (error) {
-      setError("Serverga ulanishda xatolik")
+      console.error(error);
+      setError("Serverga ulanishda xatolik");
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   const handleFormClose = () => {
-    setIsFormOpen(false)
-    setEditingCategory(null)
-    setFormData({ name: "" })
-    setError("")
-  }
+    setIsFormOpen(false);
+    setEditingCategory(null);
+    setFormData({ name: "" });
+    setError("");
+  };
 
   const filteredCategories = categories.filter((category) =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase()),
-  )
+  );
 
   if (error && !isFormOpen) {
     return (
@@ -128,7 +155,7 @@ export default function CategoriesManagement() {
           Qayta urinish
         </Button>
       </div>
-    )
+    );
   }
 
   if (isLoading) {
@@ -137,7 +164,7 @@ export default function CategoriesManagement() {
         <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4" />
         <p>Kategoriyalar yuklanmoqda...</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -157,7 +184,10 @@ export default function CategoriesManagement() {
             <RefreshCw className="w-4 h-4" />
           </Button>
         </div>
-        <Button onClick={handleAddNew} className="bg-blue-600 hover:bg-blue-700">
+        <Button
+          onClick={handleAddNew}
+          className="bg-blue-600 hover:bg-blue-700"
+        >
           <Plus className="w-4 h-4 mr-2" />
           Yangi Kategoriya
         </Button>
@@ -165,7 +195,10 @@ export default function CategoriesManagement() {
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredCategories.map((category) => (
-          <Card key={category.id} className="hover:shadow-lg transition-shadow duration-300">
+          <Card
+            key={category.id}
+            className="hover:shadow-lg transition-shadow duration-300"
+          >
             <CardHeader>
               <CardTitle className="text-lg">{category.name}</CardTitle>
             </CardHeader>
@@ -175,15 +208,26 @@ export default function CategoriesManagement() {
                   ID: <span className="font-mono">{category.id}</span>
                 </p>
                 <p>
-                  Yaratilgan: <span className="font-medium">{new Date(category.createdAt).toLocaleDateString()}</span>
+                  Yaratilgan:{" "}
+                  <span className="font-medium">
+                    {new Date(category.createdAt).toLocaleDateString()}
+                  </span>
                 </p>
                 <p>
-                  Yangilangan: <span className="font-medium">{new Date(category.updatedAt).toLocaleDateString()}</span>
+                  Yangilangan:{" "}
+                  <span className="font-medium">
+                    {new Date(category.updatedAt).toLocaleDateString()}
+                  </span>
                 </p>
               </div>
 
               <div className="flex space-x-2">
-                <Button size="sm" variant="outline" className="flex-1" onClick={() => handleEdit(category)}>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => handleEdit(category)}
+                >
                   <Edit className="w-3 h-3 mr-1" />
                   Tahrirlash
                 </Button>
@@ -204,7 +248,9 @@ export default function CategoriesManagement() {
       {filteredCategories.length === 0 && !isLoading && (
         <div className="text-center py-8">
           <p className="text-gray-500">
-            {searchTerm ? "Qidiruv bo'yicha kategoriyalar topilmadi" : "Hozircha kategoriyalar mavjud emas"}
+            {searchTerm
+              ? "Qidiruv bo'yicha kategoriyalar topilmadi"
+              : "Hozircha kategoriyalar mavjud emas"}
           </p>
         </div>
       )}
@@ -214,7 +260,11 @@ export default function CategoriesManagement() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <Card className="w-full max-w-md">
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>{editingCategory ? "Kategoriyani Tahrirlash" : "Yangi Kategoriya Qo'shish"}</CardTitle>
+              <CardTitle>
+                {editingCategory
+                  ? "Kategoriyani Tahrirlash"
+                  : "Yangi Kategoriya Qo'shish"}
+              </CardTitle>
               <Button variant="ghost" size="icon" onClick={handleFormClose}>
                 <X className="w-4 h-4" />
               </Button>
@@ -223,7 +273,9 @@ export default function CategoriesManagement() {
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
                 {error && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">{error}</div>
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+                    {error}
+                  </div>
                 )}
 
                 <div>
@@ -240,10 +292,19 @@ export default function CategoriesManagement() {
                 </div>
 
                 <div className="flex justify-end space-x-4">
-                  <Button variant="outline" type="button" onClick={handleFormClose} disabled={isSaving}>
+                  <Button
+                    variant="outline"
+                    type="button"
+                    onClick={handleFormClose}
+                    disabled={isSaving}
+                  >
                     Bekor qilish
                   </Button>
-                  <Button type="submit" disabled={isSaving} className="bg-blue-600 hover:bg-blue-700">
+                  <Button
+                    type="submit"
+                    disabled={isSaving}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
                     {isSaving ? (
                       <>
                         <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -263,5 +324,5 @@ export default function CategoriesManagement() {
         </div>
       )}
     </div>
-  )
+  );
 }
