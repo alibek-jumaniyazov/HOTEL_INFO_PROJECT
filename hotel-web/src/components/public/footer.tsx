@@ -11,6 +11,8 @@ import {
   Youtube,
   Star,
 } from "lucide-react";
+import Image from "next/image";
+import Logo from "/public/Logo.svg";
 
 export default function Footer() {
   const quickLinks = [
@@ -41,7 +43,6 @@ export default function Footer() {
 
   return (
     <footer className="bg-gray-900 text-white">
-      {/* Newsletter section */}
       <div className="bg-blue-600 py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
@@ -66,16 +67,12 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Main footer content */}
       <div className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-8">
-            {/* Hotel info */}
             <div className="lg:col-span-1">
               <div className="flex items-center space-x-2 mb-6">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">H</span>
-                </div>
+                <Image src={Logo} alt="Hotel Logo" className="w-12" />
                 <span className="text-xl font-bold">Luxury Hotel</span>
               </div>
               <p className="text-gray-300 mb-6 leading-relaxed">
@@ -83,21 +80,6 @@ export default function Footer() {
                 qulayliklar va professional xizmat bilan unutilmas tajriba
                 yaratamiz.
               </p>
-
-              {/* Rating */}
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="flex items-center space-x-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="w-4 h-4 fill-yellow-400 text-yellow-400"
-                    />
-                  ))}
-                </div>
-                <span className="text-sm text-gray-300">
-                  5.0 (1,234 ta sharh)
-                </span>
-              </div>
 
               {/* Social links */}
               <div className="flex space-x-4">

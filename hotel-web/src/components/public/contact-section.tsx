@@ -135,7 +135,6 @@ export default function ContactSection() {
             </div>
           </div>
 
-          {/* Right side - Contact form */}
           <div>
             <Card className="shadow-xl">
               <CardHeader>
@@ -205,7 +204,7 @@ export default function ContactSection() {
                       }
                       placeholder="Xabaringizni yozing..."
                       rows={5}
-                      className="w-full h-[90px] pt-4 pl-6 placeholder:text-base"
+                      className="w-full h-[115px] pt-4 pl-6 placeholder:text-base"
                     />
                   </div>
 
