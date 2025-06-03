@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Play, X } from "lucide-react";
 import Image from "next/image";
+import poster from "@@/public/image.png";
 
 export default function VideoSection() {
   const [isVideoOpen, setIsVideoOpen] = useState(false);
@@ -38,7 +39,7 @@ export default function VideoSection() {
             {/* Video thumbnail */}
             <div className="relative overflow-hidden rounded-2xl shadow-2xl">
               <Image
-                src=""
+                src={poster}
                 alt="Hotel Video"
                 className="w-full h-[400px] md:h-[500px] object-cover"
               />
@@ -46,14 +47,13 @@ export default function VideoSection() {
                 <Button
                   size="lg"
                   onClick={() => setIsVideoOpen(true)}
-                  className="w-20 h-20 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm border-2 border-white/50 transition-all duration-300 hover:scale-110"
+                  className="cursor-pointer w-20 h-20 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm border-2 border-white/50 transition-all duration-300 hover:scale-110"
                 >
                   <Play className="w-8 h-8 text-white ml-1" />
                 </Button>
               </div>
             </div>
 
-            {/* Decorative elements */}
             <div className="absolute -top-4 -left-4 w-24 h-24 bg-blue-500/20 rounded-full blur-xl"></div>
             <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-purple-500/20 rounded-full blur-xl"></div>
           </div>
@@ -74,12 +74,12 @@ export default function VideoSection() {
             </Button>
             <div className="relative overflow-hidden rounded-lg">
               <video
+                src="/video/timelaps.mp4"
                 className="w-full h-auto"
                 controls
                 autoPlay
-                poster="/placeholder.svg?height=600&width=800"
               >
-                <source src="/path/to/video.mp4" type="video/mp4" />
+                <source src="/video/timelaps.mp4" type="video/mp4" />
                 Sizning brauzeringiz video formatini
                 qo&rsquo;llab-quvvatlamaydi.
               </video>

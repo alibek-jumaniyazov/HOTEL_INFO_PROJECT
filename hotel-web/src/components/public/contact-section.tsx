@@ -52,14 +52,14 @@ export default function ContactSection() {
     {
       icon: MapPin,
       title: "Manzil",
-      content: "Toshkent, Amir Temur ko'chasi 15",
-      subContent: "Chilonzor tumani",
+      content: "Urganch, Yoshlik ko'chasi 37/1",
+      subContent: "Xorazm",
     },
     {
       icon: Phone,
       title: "Telefon",
-      content: "+998 90 123 45 67",
-      subContent: "+998 71 123 45 67",
+      content: "+998 90 438 94 84",
+      subContent: "+998 91 985 94 84",
     },
     {
       icon: Mail,

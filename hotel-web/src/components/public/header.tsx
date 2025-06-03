@@ -43,7 +43,7 @@ export default function Header() {
           <div className="hidden lg:flex items-center space-x-4">
             <div className="flex items-center space-x-2 text-sm text-gray-600">
               <Phone className="w-4 h-4" />
-              <span>+998 90 123 45 67</span>
+              <span>+998 90 438 94 84</span>
             </div>
             <Button className="bg-blue-600 hover:bg-blue-700">Aloqa</Button>
           </div>

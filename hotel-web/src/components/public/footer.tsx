@@ -42,7 +42,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-gray-900 text-white">
-      <div className="bg-blue-600 py-12">
+      {/* <div className="bg-blue-600 py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h3 className="text-2xl md:text-3xl font-bold mb-4">
@@ -64,7 +64,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="py-16">
         <div className="container mx-auto px-4">
@@ -72,16 +72,15 @@ export default function Footer() {
             <div className="lg:col-span-1">
               <div className="flex items-center space-x-2 mb-6">
                 <Image src={Logo} alt="Hotel Logo" className="w-12" />
-                <span className="text-xl font-bold">Luxury Hotel</span>
+                <span className="text-xl font-bold">Sulaymon Hotel</span>
               </div>
               <p className="text-gray-300 mb-6 leading-relaxed">
-                Toshkent markazida joylashgan 5 yulduzli mehmonxona. Zamonaviy
-                qulayliklar va professional xizmat bilan unutilmas tajriba
-                yaratamiz.
+                Urganch shaxrida joylashgan. Zamonaviy qulayliklar va
+                professional xizmat bilan unutilmas tajriba yaratamiz.
               </p>
 
               {/* Social links */}
-              <div className="flex space-x-4">
+              {/* <div className="flex space-x-4">
                 {socialLinks.map((social, index) => (
                   <a
                     key={index}
@@ -92,7 +91,7 @@ export default function Footer() {
                     <social.icon className="w-5 h-5" />
                   </a>
                 ))}
-              </div>
+              </div> */}
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-6">Tezkor havolalar</h4>
@@ -131,9 +130,9 @@ export default function Footer() {
                   <MapPin className="w-5 h-5 text-blue-400 mt-1 flex-shrink-0" />
                   <div>
                     <p className="text-gray-300">
-                      Toshkent, Amir Temur ko&rsquo;chasi 15
+                      Urganch, Yoshlik ko&lsquo;chasi 37/1
                     </p>
-                    <p className="text-sm text-gray-400">Chilonzor tumani</p>
+                    <p className="text-sm text-gray-400">Xorazm</p>
                   </div>
                 </div>
 
