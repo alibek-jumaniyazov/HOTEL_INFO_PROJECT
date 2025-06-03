@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Users, Calendar } from "lucide-react";
-import SimpleImage from "@/components/ui/simple-image";
 import hotelImg from "@@/public/hotel.jpg";
 import Image from "next/image";
 

@@ -9,7 +9,6 @@ import {
   Instagram,
   Twitter,
   Youtube,
-  Star,
 } from "lucide-react";
 import Image from "next/image";
 import Logo from "/public/Logo.svg";
@@ -95,8 +94,6 @@ export default function Footer() {
                 ))}
               </div>
             </div>
-
-            {/* Quick links */}
             <div>
               <h4 className="text-lg font-semibold mb-6">Tezkor havolalar</h4>
               <ul className="space-y-3">

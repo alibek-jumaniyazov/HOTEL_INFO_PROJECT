@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { MapPin, Wifi, Car, Coffee, Phone } from "lucide-react";
+import { MapPin, Wifi, Car, Phone } from "lucide-react";
 
 export default function HeroSection() {
   return (
@@ -71,7 +71,7 @@ export default function HeroSection() {
 
           <div className="flex items-center justify-center space-x-2 mb-8 text-blue-200">
             <MapPin className="w-5 h-5" />
-            <span className="text-lg">Urganch, yoshlik ko'chasi 37/1</span>
+            <span className="text-lg">Urganch, yoshlik ko&lsquo;chasi 37/1</span>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-2 gap-4 mb-10 max-w-2xl mx-auto">
@@ -83,10 +83,6 @@ export default function HeroSection() {
               <Car className="w-6 h-6 text-blue-300" />
               <span className="text-sm font-medium">Parking</span>
             </div>
-            {/* <div className="flex flex-col items-center space-y-2 p-4 bg-white/10 rounded-lg backdrop-blur-sm">
-              <Coffee className="w-6 h-6 text-blue-300" />
-              <span className="text-sm font-medium">Restaurant</span>
-            </div> */}
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 w-full">
