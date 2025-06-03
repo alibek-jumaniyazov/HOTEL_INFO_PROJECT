@@ -36,7 +36,7 @@ export default function ContactSection() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ chat_id: chatId, text: message }),
-        },
+        }
       );
       alert("Xabaringiz muvaffaqiyatli yuborildi!");
       setFormData({ name: "", phone: "", message: "" });
@@ -94,7 +94,7 @@ export default function ContactSection() {
             {/* Google Map */}
             <div className="relative overflow-hidden rounded-2xl shadow-lg h-100">
               <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2996.5!2d69.2401!3d41.2995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDHCsDE3JzU4LjIiTiA2OcKwMTQnMjQuNCJF!5e0!3m2!1sen!2s!4v1234567890"
+                src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d373.3093950912438!2d60.622916590052256!3d41.53730803184438!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sUrganch%20%2C%20yoshlik%20ko&#39;chasi%2037%2F1!5e0!3m2!1sru!2s!4v1748937315627!5m2!1sru!2s"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}

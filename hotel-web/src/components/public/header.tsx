@@ -24,7 +24,7 @@ export default function Header() {
           <div className="flex items-center space-x-2">
             <Image src={Logo} alt="Hotel Logo" className="w-12" />
             <span className="text-xl font-bold text-gray-900">
-              Luxury Hotel
+              Sulaymon Hotel
             </span>
           </div>
 

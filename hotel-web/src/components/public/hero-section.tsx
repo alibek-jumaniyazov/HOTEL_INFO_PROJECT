@@ -61,23 +61,20 @@ export default function HeroSection() {
           </div> */}
 
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
-            Luxury Hotel
+            Sulaymon Hotel
           </h1>
 
           <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-2xl mx-auto leading-relaxed">
-            Toshkent markazida joylashgan 5 yulduzli mehmonxona. Zamonaviy
-            qulayliklar va professional xizmat.
+            Urganch shaxrida joylashgan. Zamonaviy qulayliklar va professional
+            xizmat.
           </p>
 
           <div className="flex items-center justify-center space-x-2 mb-8 text-blue-200">
             <MapPin className="w-5 h-5" />
-            <span className="text-lg">
-              Toshkent, Amir Temur ko&rsquo;chasi 15
-            </span>
+            <span className="text-lg">Urganch, yoshlik ko'chasi 37/1</span>
           </div>
 
-          {/* Features */}
-          <div className="grid grid-cols-3 md:grid-cols-3 gap-4 mb-10 max-w-2xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-4 mb-10 max-w-2xl mx-auto">
             <div className="flex flex-col items-center space-y-2 p-4 bg-white/10 rounded-lg backdrop-blur-sm">
               <Wifi className="w-6 h-6 text-blue-300" />
               <span className="text-sm font-medium">Bepul WiFi</span>
@@ -86,10 +83,10 @@ export default function HeroSection() {
               <Car className="w-6 h-6 text-blue-300" />
               <span className="text-sm font-medium">Parking</span>
             </div>
-            <div className="flex flex-col items-center space-y-2 p-4 bg-white/10 rounded-lg backdrop-blur-sm">
+            {/* <div className="flex flex-col items-center space-y-2 p-4 bg-white/10 rounded-lg backdrop-blur-sm">
               <Coffee className="w-6 h-6 text-blue-300" />
               <span className="text-sm font-medium">Restaurant</span>
-            </div>
+            </div> */}
           </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 w-full">

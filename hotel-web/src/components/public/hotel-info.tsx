@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, Users, Calendar } from "lucide-react";
 import SimpleImage from "@/components/ui/simple-image";
+import hotelImg from "@@/public/hotel.jpg";
+import Image from "next/image";
 
 export default function HotelInfo() {
   const [mounted, setMounted] = useState(false);
@@ -22,7 +24,7 @@ export default function HotelInfo() {
 
   const features = [
     "Xorazm markazida qulay joylashuv",
-    "15 ta zamonaviy xona va suite",
+    "11 ta zamonaviy xona",
     "24/7 xona xizmati",
     "Bepul WiFi barcha hududlarda",
     "Bepul parking",
@@ -30,7 +32,7 @@ export default function HotelInfo() {
 
   const stats = [
     { icon: Users, number: "300+", label: "Mamnun mijozlar" },
-    { icon: Calendar, number: "2+", label: "Yillik tajriba" },
+    { icon: Calendar, number: "1+", label: "Yillik tajriba" },
   ];
 
   if (!mounted) {
@@ -57,12 +59,11 @@ export default function HotelInfo() {
           <div className="space-y-8">
             <div>
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Bizning hotel haqida
+                Bizning hotel haqida 
               </h2>
               <p className="text-lg text-gray-600 leading-relaxed mb-6">
-                Luxury Hotel - Toshkent markazida joylashgan zamonaviy 5
-                yulduzli mehmonxona. Biz mijozlarimizga eng yuqori sifatli
-                xizmat va unutilmas tajriba taqdim etamiz.
+                Sulaymon hotel - Urganch shaxrida joylashgan. Zamonaviy
+                qulayliklar va professional xizmat.
               </p>
               <p className="text-lg text-gray-600 leading-relaxed">
                 Bizning professional jamoa har bir mehmonning ehtiyojlarini
@@ -103,11 +104,17 @@ export default function HotelInfo() {
           </div>
           <div className="relative">
             <div className="relative overflow-hidden rounded-2xl shadow-2xl">
-              <SimpleImage
-                src="/images/hotel-exterior.jpg"
+              {/* <img src={hotelImg} alt="" /> */}
+              <Image
+                src={hotelImg}
+                alt="Luxury Hotel"
+                className="w-full  object-cover"
+              />
+              {/* <SimpleImage
+                src={hotelImg}
                 alt="Luxury Hotel"
                 className="w-full h-[600px]"
-              />
+              /> */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
             </div>
           </div>
