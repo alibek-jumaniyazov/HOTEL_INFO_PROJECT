@@ -1,14 +1,12 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import {
   MapPin,
   Phone,
   Mail,
-  Facebook,
-  Instagram,
-  Twitter,
-  Youtube,
+  // Facebook,
+  // Instagram,
+  // Twitter,
+  // Youtube,
 } from "lucide-react";
 import Image from "next/image";
 import Logo from "/public/Logo.svg";
@@ -33,12 +31,12 @@ export default function Footer() {
   //   "Concierge xizmati",
   // ];
 
-  const socialLinks = [
-    { icon: Facebook, href: "#", name: "Facebook" },
-    { icon: Instagram, href: "#", name: "Instagram" },
-    { icon: Twitter, href: "#", name: "Twitter" },
-    { icon: Youtube, href: "#", name: "YouTube" },
-  ];
+  // const socialLinks = [
+  //   { icon: Facebook, href: "#", name: "Facebook" },
+  //   { icon: Instagram, href: "#", name: "Instagram" },
+  //   { icon: Twitter, href: "#", name: "Twitter" },
+  //   { icon: Youtube, href: "#", name: "YouTube" },
+  // ];
 
   return (
     <footer className="bg-gray-900 text-white">
