@@ -3,15 +3,15 @@
   "/api/hotel/route": "/api/hotel",
   "/api/rooms/route": "/api/rooms",
   "/favicon.ico/route": "/favicon.ico",
-  "/api/rooms/[id]/route": "/api/rooms/[id]",
   "/api/images/[...path]/route": "/api/images/[...path]",
+  "/api/rooms/[id]/route": "/api/rooms/[id]",
   "/page": "/",
-  "/(admin)/admin/categories/page": "/admin/categories",
   "/(admin)/admin/hotel/page": "/admin/hotel",
+  "/(admin)/admin/categories/page": "/admin/categories",
   "/(admin)/admin/dashboard/page": "/admin/dashboard",
-  "/(admin)/admin/rooms/page": "/admin/rooms",
   "/(admin)/admin/page": "/admin",
   "/(admin)/admin/message/page": "/admin/message",
+  "/(admin)/admin/rooms/page": "/admin/rooms",
   "/(public)/page": "/",
   "/(admin)/admin/login/page": "/admin/login"
 }
