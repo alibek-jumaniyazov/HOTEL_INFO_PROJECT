@@ -1,7 +1,7 @@
 "use client";
 
 // API Base Configuration
-const API_BASE_URL = "http://localhost:3001/api";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL||"http://localhost:3001/api"; // Fixed typo in environment variable
 
 // Types matching exact backend schema
 export interface LoginCredentials {

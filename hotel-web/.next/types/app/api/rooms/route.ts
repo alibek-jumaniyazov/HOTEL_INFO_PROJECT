@@ -1,4 +1,4 @@
-// File: C:\Users\mello\OneDrive\Документы\GitHub\HOTEL_INFO_PROJECT\hotel-web\src\app\api\rooms\route.ts
+// File: /Users/otabekotanazarov/Coding/hotel/frontend/hotel-web/src/app/api/rooms/route.ts
 import * as entry from '../../../../../src/app/api/rooms/route.js'
 import type { NextRequest } from 'next/server.js'
 

@@ -1,17 +1,17 @@
 {
   "/_not-found/page": "/_not-found",
-  "/api/images/[...path]/route": "/api/images/[...path]",
-  "/api/rooms/[id]/route": "/api/rooms/[id]",
   "/api/hotel/route": "/api/hotel",
-  "/api/rooms/route": "/api/rooms",
+  "/api/images/[...path]/route": "/api/images/[...path]",
   "/favicon.ico/route": "/favicon.ico",
+  "/api/rooms/route": "/api/rooms",
+  "/api/rooms/[id]/route": "/api/rooms/[id]",
   "/page": "/",
-  "/(admin)/admin/login/page": "/admin/login",
-  "/(admin)/admin/message/page": "/admin/message",
   "/(admin)/admin/categories/page": "/admin/categories",
+  "/(admin)/admin/message/page": "/admin/message",
+  "/(admin)/admin/login/page": "/admin/login",
+  "/(admin)/admin/page": "/admin",
   "/(admin)/admin/dashboard/page": "/admin/dashboard",
   "/(admin)/admin/rooms/page": "/admin/rooms",
-  "/(admin)/admin/hotel/page": "/admin/hotel",
-  "/(admin)/admin/page": "/admin",
-  "/(public)/page": "/"
+  "/(public)/page": "/",
+  "/(admin)/admin/hotel/page": "/admin/hotel"
 }

@@ -1,4 +1,4 @@
-// File: C:\Users\mello\OneDrive\Документы\GitHub\HOTEL_INFO_PROJECT\hotel-web\src\app\(admin)\admin\dashboard\page.tsx
+// File: /Users/otabekotanazarov/Coding/hotel/frontend/hotel-web/src/app/(admin)/admin/dashboard/page.tsx
 import * as entry from '../../../../../../src/app/(admin)/admin/dashboard/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
