@@ -30,7 +30,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/": {
+    "/admin/dashboard": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -43,8 +43,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/",
-      "dataRoute": "/index.rsc",
+      "srcRoute": "/admin/dashboard",
+      "dataRoute": "/admin/dashboard.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -54,7 +54,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/admin/hotel": {
+    "/admin/categories": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -67,8 +67,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/admin/hotel",
-      "dataRoute": "/admin/hotel.rsc",
+      "srcRoute": "/admin/categories",
+      "dataRoute": "/admin/categories.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -126,7 +126,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/admin": {
+    "/": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -139,8 +139,32 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/admin",
-      "dataRoute": "/admin.rsc",
+      "srcRoute": "/",
+      "dataRoute": "/index.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/admin/hotel": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/admin/hotel",
+      "dataRoute": "/admin/hotel.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -174,7 +198,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/admin/dashboard": {
+    "/admin": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -187,32 +211,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/admin/dashboard",
-      "dataRoute": "/admin/dashboard.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/admin/categories": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "Next-Action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/admin/categories",
-      "dataRoute": "/admin/categories.rsc",
+      "srcRoute": "/admin",
+      "dataRoute": "/admin.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -226,8 +226,8 @@
   "dynamicRoutes": {},
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "7ed99018952bb83b336bf991824e587a",
-    "previewModeSigningKey": "f94fc161322619ad5afc72fe5bfa3a72021655178405878c3784335e2c885571",
-    "previewModeEncryptionKey": "0df7d6b71e870073765f2f4afc8782ab65209821f40574a0021075ce094004bd"
+    "previewModeId": "efb7ee863e0ed98c2df32ebd3ef6c830",
+    "previewModeSigningKey": "128b37e9ec85066c7b26d179dca44ff53127f060778ead146f29639f8f22784e",
+    "previewModeEncryptionKey": "44f49344c7507f57a77a7559861d5ce20b2f76b8a283d9808c51a09184faa796"
   }
 }
