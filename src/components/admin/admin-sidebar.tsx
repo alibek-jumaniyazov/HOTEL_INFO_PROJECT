@@ -4,13 +4,13 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Building, Bed, ChevronLeft, ChevronRight, Tag } from "lucide-react";
+import { Bed, ChevronLeft, ChevronRight, Tag } from "lucide-react";
 import Image from "next/image";
 import Logo from "/public/Logo.svg";
 
 const navigation = [
   // { name: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
-  { name: "Hotel Ma'lumotlari", href: "/admin/hotel", icon: Building },
+  // { name: "Hotel Ma'lumotlari", href: "/admin/hotel", icon: Building },
   { name: "Kategoriyalar", href: "/admin/categories", icon: Tag },
   { name: "Xonalar", href: "/admin/rooms", icon: Bed },
 ];
@@ -54,7 +54,7 @@ export default function AdminSidebar() {
           <div className="flex items-center space-x-2">
             <Image src={Logo} alt="Hotel Logo" className="w-12" />
 
-            <span className="font-bold text-gray-900">Luxury Hotel</span>
+            <span className="font-bold text-gray-900">Sulaymon Hotel</span>
           </div>
         )}
         <button

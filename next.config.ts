@@ -1,7 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["placeholder.svg"],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'api.sulaymonhotel.uz',
+        pathname: '/api/uploads/**',
+      },
+    ],
+    domains: ['api.sulaymonhotel.uz'], // Added for compatibility
   },
 };
 

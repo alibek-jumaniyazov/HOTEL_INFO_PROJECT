@@ -17,14 +17,14 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<Record<string, unknown> | null>(null);
-  console.log(user);
+  const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
+    setHasMounted(true);
+
     const checkAuth = () => {
-      if (typeof window !== "undefined") {
-        const authenticated = AuthAPI.isAuthenticated();
-        setIsAuthenticated(authenticated);
-      }
+      const authenticated = AuthAPI.isAuthenticated();
+      setIsAuthenticated(authenticated);
       setIsLoading(false);
     };
 
@@ -39,15 +39,14 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
       window.location.href = "/admin/login";
     } catch (error) {
       console.error("Logout error:", error);
-      // Force logout even if API call fails
       setIsAuthenticated(false);
       setUser(null);
       window.location.href = "/admin/login";
     }
   };
 
-  // Show loading state during hydration
-  if (isLoading) {
+  // ⛔️ Hydration error oldini olish uchun
+  if (!hasMounted || isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>

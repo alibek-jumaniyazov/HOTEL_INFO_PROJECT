@@ -23,7 +23,6 @@ export default function VideoSection() {
         id="video"
         className="py-20 bg-gradient-to-br  relative overflow-hidden"
       >
-        {/* Background pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute inset-0">
             <div

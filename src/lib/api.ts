@@ -510,7 +510,7 @@ export class RoomsAPI {
       } else {
         // files ishlatilmayapti, shuning uchun olib tashladik:
         const dataWithoutFiles = { ...roomData };
-        delete (dataWithoutFiles).files; // agar files bor bo'lsa, o'chiramiz
+        delete dataWithoutFiles.files; // agar files bor bo'lsa, o'chiramiz
 
         const response = await ApiClient.post<Room>("/rooms", dataWithoutFiles);
         return { success: true, data: response };
@@ -553,7 +553,7 @@ export class RoomsAPI {
         return { success: true, data: response };
       } else {
         const dataWithoutFiles = { ...roomData };
-        delete (dataWithoutFiles).files;
+        delete dataWithoutFiles.files;
 
         const response = await ApiClient.patch<Room>(
           `/rooms/${id}`,

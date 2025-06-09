@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { ImageIcon, AlertCircle } from "lucide-react";
 import Image from "next/image";
@@ -27,19 +25,19 @@ export default function ImagePlaceholder({
   // Create inline SVG placeholder
   const createPlaceholderSVG = (w: number, h: number) => {
     const svg = `
-    <svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg">
-      <rect width="100%" height="100%" fill="#f3f4f6"/>
-      <g transform="translate(${w / 2}, ${h / 2})">
-        <circle r="24" fill="#d1d5db"/>
-        <path d="M-12,-8 L12,-8 L12,8 L-12,8 Z M-8,-4 L8,-4 L8,4 L-8,4 Z" fill="#9ca3af"/>
-        <circle cx="-4" cy="-1" r="2" fill="#6b7280"/>
-        <path d="M-8,2 L-4,-2 L0,2 L4,-1 L8,3" stroke="#6b7280" strokeWidth="1.5" fill="none"/>
-      </g>
-      <text x="50%" y="75%" textAnchor="middle" fill="#6b7280" fontFamily="Arial, sans-serif" fontSize="14">
-        ${w} × ${h}
-      </text>
-    </svg>
-  `;
+      <svg width="${w}" height="${h}" xmlns="http://www.w3.org/2000/svg">
+        <rect width="100%" height="100%" fill="#f3f4f6"/>
+        <g transform="translate(${w / 2}, ${h / 2})">
+          <circle r="24" fill="#d1d5db"/>
+          <path d="M-12,-8 L12,-8 L12,8 L-12,8 Z M-8,-4 L8,-4 L8,4 L-8,4 Z" fill="#9ca3af"/>
+          <circle cx="-4" cy="-1" r="2" fill="#6b7280"/>
+          <path d="M-8,2 L-4,-2 L0,2 L4,-1 L8,3" stroke="#6b7280" strokeWidth="1.5" fill="none"/>
+        </g>
+        <text x="50%" y="75%" textAnchor="middle" fill="#6b7280" fontFamily="Arial, sans-serif" fontSize="14">
+          ${w} × ${h}
+        </text>
+      </svg>
+    `;
     return `data:image/svg+xml;base64,${btoa(svg)}`;
   };
 
@@ -64,7 +62,6 @@ export default function ImagePlaceholder({
     setImageError(true);
   };
 
-  // If no src provided or error occurred, show placeholder
   if (!src || imageError) {
     const placeholderSrc = createPlaceholderSVG(width, height);
     return (
@@ -72,8 +69,10 @@ export default function ImagePlaceholder({
         className={`relative overflow-hidden ${getAspectRatioClass()} ${className}`}
       >
         <Image
-          src={placeholderSrc || "/placeholder.png"}
+          src={placeholderSrc}
           alt={alt}
+          width={width}
+          height={height}
           className="w-full h-full object-cover"
           loading="lazy"
         />
@@ -93,8 +92,10 @@ export default function ImagePlaceholder({
         </div>
       )}
       <Image
-        src={src || "/placeholder.png"}
+        src={src}
         alt={alt}
+        width={width}
+        height={height}
         className={`w-full h-full object-cover transition-opacity duration-300 ${isLoading ? "opacity-0" : "opacity-100"}`}
         onLoad={handleImageLoad}
         onError={handleImageError}

@@ -38,8 +38,9 @@ export default function ImageUpload({
       }
       return previewUrls[fileKey];
     },
-    [previewUrls],
+    [previewUrls]
   );
+  console.log("existingImages", existingImages);
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -61,20 +62,20 @@ export default function ImageUpload({
 
       if (e.dataTransfer.files && e.dataTransfer.files[0]) {
         const newFiles = Array.from(e.dataTransfer.files).filter((file) =>
-          file.type.startsWith("image/"),
+          file.type.startsWith("image/")
         );
         if (newFiles.length > 0) {
           onFilesChange([...selectedFiles, ...newFiles]);
         }
       }
     },
-    [selectedFiles, onFilesChange, disabled],
+    [selectedFiles, onFilesChange, disabled]
   );
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const newFiles = Array.from(e.target.files).filter((file) =>
-        file.type.startsWith("image/"),
+        file.type.startsWith("image/")
       );
       if (newFiles.length > 0) {
         onFilesChange([...selectedFiles, ...newFiles]);
@@ -86,7 +87,6 @@ export default function ImageUpload({
     const fileToRemove = selectedFiles[index];
     const fileKey = `${fileToRemove.name}-${fileToRemove.size}-${fileToRemove.lastModified}`;
 
-    // Revoke URL to prevent memory leaks
     if (previewUrls[fileKey]) {
       URL.revokeObjectURL(previewUrls[fileKey]);
       setPreviewUrls((prev) => {
@@ -239,7 +239,7 @@ export default function ImageUpload({
               <div key={`existing-${image.id}`} className="relative group">
                 <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-200">
                   <ImagePlaceholder
-                    src={image.url || ""}
+                    src={`https://api.sulaymonhotel.uz${image.url}`}
                     alt={`Room image ${image.id}`}
                     aspectRatio="square"
                     className="w-full h-full"
