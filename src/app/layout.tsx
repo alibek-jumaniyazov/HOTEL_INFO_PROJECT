@@ -6,8 +6,9 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Luxury Hotel - Toshkent",
-  description: "Qulay joylashuv va zamonaviy qulayliklar bilan to'la mehmonxona.",
+  title: "Sulaymon Hotel",
+  description:
+    "Qulay joylashuv va zamonaviy qulayliklar bilan to'la mehmonxona.",
   icons: {
     icon: "/Logo.svg",
   },
