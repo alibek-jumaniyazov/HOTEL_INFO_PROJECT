@@ -7,7 +7,10 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Luxury Hotel - Toshkent",
-  description: "5 yulduzli mehmonxona Toshkent markazida",
+  description: "Qulay joylashuv va zamonaviy qulayliklar bilan to'la mehmonxona.",
+  icons: {
+    icon: "/Logo.svg",
+  },
 };
 
 export default function RootLayout({

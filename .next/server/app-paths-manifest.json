@@ -1,17 +1,17 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
+  "/api/images/[...path]/route": "app/api/images/[...path]/route.js",
   "/api/hotel/route": "app/api/hotel/route.js",
+  "/api/rooms/[id]/route": "app/api/rooms/[id]/route.js",
   "/api/rooms/route": "app/api/rooms/route.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/api/images/[...path]/route": "app/api/images/[...path]/route.js",
-  "/api/rooms/[id]/route": "app/api/rooms/[id]/route.js",
   "/page": "app/page.js",
-  "/(admin)/admin/hotel/page": "app/(admin)/admin/hotel/page.js",
   "/(admin)/admin/categories/page": "app/(admin)/admin/categories/page.js",
-  "/(admin)/admin/dashboard/page": "app/(admin)/admin/dashboard/page.js",
-  "/(admin)/admin/page": "app/(admin)/admin/page.js",
-  "/(admin)/admin/message/page": "app/(admin)/admin/message/page.js",
-  "/(admin)/admin/rooms/page": "app/(admin)/admin/rooms/page.js",
+  "/(admin)/admin/hotel/page": "app/(admin)/admin/hotel/page.js",
   "/(public)/page": "app/(public)/page.js",
-  "/(admin)/admin/login/page": "app/(admin)/admin/login/page.js"
+  "/(admin)/admin/message/page": "app/(admin)/admin/message/page.js",
+  "/(admin)/admin/dashboard/page": "app/(admin)/admin/dashboard/page.js",
+  "/(admin)/admin/login/page": "app/(admin)/admin/login/page.js",
+  "/(admin)/admin/page": "app/(admin)/admin/page.js",
+  "/(admin)/admin/rooms/page": "app/(admin)/admin/rooms/page.js"
 }

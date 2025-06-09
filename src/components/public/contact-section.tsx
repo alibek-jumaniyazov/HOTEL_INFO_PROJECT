@@ -64,8 +64,8 @@ export default function ContactSection() {
     {
       icon: Mail,
       title: "Email",
-      content: "info@luxuryhotel.uz",
-      subContent: "booking@luxuryhotel.uz",
+      content: "sulaymonhotel@gmail.com",
+      subContent: "sulaymonhotel@gmail.com",
     },
     {
       icon: Clock,
