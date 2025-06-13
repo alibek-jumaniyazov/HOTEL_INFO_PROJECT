@@ -6,12 +6,12 @@
   "/api/rooms/route": "/api/rooms",
   "/favicon.ico/route": "/favicon.ico",
   "/page": "/",
-  "/(admin)/admin/categories/page": "/admin/categories",
   "/(admin)/admin/hotel/page": "/admin/hotel",
+  "/(admin)/admin/categories/page": "/admin/categories",
+  "/(admin)/admin/dashboard/page": "/admin/dashboard",
+  "/(admin)/admin/login/page": "/admin/login",
   "/(admin)/admin/message/page": "/admin/message",
   "/(public)/page": "/",
-  "/(admin)/admin/login/page": "/admin/login",
-  "/(admin)/admin/rooms/page": "/admin/rooms",
   "/(admin)/admin/page": "/admin",
-  "/(admin)/admin/dashboard/page": "/admin/dashboard"
+  "/(admin)/admin/rooms/page": "/admin/rooms"
 }

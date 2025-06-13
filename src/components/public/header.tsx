@@ -16,7 +16,13 @@ export default function Header() {
     { name: "Video", href: "#video" },
     { name: "Aloqa", href: "#contact" },
   ];
-
+  const scrollToContact = () => {
+    if (typeof window !== "undefined") {
+      document
+        .getElementById("contact")
+        ?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   return (
     <header className="fixed top-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 z-50">
       <div className="container mx-auto px-4">
@@ -45,7 +51,13 @@ export default function Header() {
               <Phone className="w-4 h-4" />
               <span>+998 90 438 94 84</span>
             </div>
-            <Button className="bg-blue-600 hover:bg-blue-700">Aloqa</Button>
+
+            <Button
+              className="bg-blue-600 hover:bg-blue-700 cursor-pointer"
+              onClick={scrollToContact}
+            >
+              Aloqa
+            </Button>
           </div>
           <button
             className="md:hidden"
@@ -72,7 +84,10 @@ export default function Header() {
                 </a>
               ))}
               <div className="pt-4 border-t border-gray-200">
-                <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                <Button
+                  className="w-full bg-blue-600 hover:bg-blue-700 cursor-pointer"
+                  onClick={scrollToContact}
+                >
                   Aloqa
                 </Button>
               </div>

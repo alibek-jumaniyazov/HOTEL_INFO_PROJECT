@@ -30,7 +30,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/admin/login": {
+    "/admin": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -43,8 +43,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/admin/login",
-      "dataRoute": "/admin/login.rsc",
+      "srcRoute": "/admin",
+      "dataRoute": "/admin.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -54,7 +54,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/admin/hotel": {
+    "/admin/categories": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -67,32 +67,8 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/admin/hotel",
-      "dataRoute": "/admin/hotel.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
-    },
-    "/": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "Next-Action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/",
-      "dataRoute": "/index.rsc",
+      "srcRoute": "/admin/categories",
+      "dataRoute": "/admin/categories.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -126,6 +102,30 @@
         "x-next-revalidate-tag-token"
       ]
     },
+    "/admin/hotel": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/admin/hotel",
+      "dataRoute": "/admin/hotel.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
     "/admin/message": {
       "experimentalBypassFor": [
         {
@@ -150,7 +150,7 @@
         "x-next-revalidate-tag-token"
       ]
     },
-    "/admin": {
+    "/admin/login": {
       "experimentalBypassFor": [
         {
           "type": "header",
@@ -163,8 +163,32 @@
         }
       ],
       "initialRevalidateSeconds": false,
-      "srcRoute": "/admin",
-      "dataRoute": "/admin.rsc",
+      "srcRoute": "/admin/login",
+      "dataRoute": "/admin/login.rsc",
+      "allowHeader": [
+        "host",
+        "x-matched-path",
+        "x-prerender-revalidate",
+        "x-prerender-revalidate-if-generated",
+        "x-next-revalidated-tags",
+        "x-next-revalidate-tag-token"
+      ]
+    },
+    "/": {
+      "experimentalBypassFor": [
+        {
+          "type": "header",
+          "key": "Next-Action"
+        },
+        {
+          "type": "header",
+          "key": "content-type",
+          "value": "multipart/form-data;.*"
+        }
+      ],
+      "initialRevalidateSeconds": false,
+      "srcRoute": "/",
+      "dataRoute": "/index.rsc",
       "allowHeader": [
         "host",
         "x-matched-path",
@@ -197,37 +221,13 @@
         "x-next-revalidated-tags",
         "x-next-revalidate-tag-token"
       ]
-    },
-    "/admin/categories": {
-      "experimentalBypassFor": [
-        {
-          "type": "header",
-          "key": "Next-Action"
-        },
-        {
-          "type": "header",
-          "key": "content-type",
-          "value": "multipart/form-data;.*"
-        }
-      ],
-      "initialRevalidateSeconds": false,
-      "srcRoute": "/admin/categories",
-      "dataRoute": "/admin/categories.rsc",
-      "allowHeader": [
-        "host",
-        "x-matched-path",
-        "x-prerender-revalidate",
-        "x-prerender-revalidate-if-generated",
-        "x-next-revalidated-tags",
-        "x-next-revalidate-tag-token"
-      ]
     }
   },
   "dynamicRoutes": {},
   "notFoundRoutes": [],
   "preview": {
-    "previewModeId": "0c664757cca1cb0ff3d92ae9a414601d",
-    "previewModeSigningKey": "e348d6fcfd088199cc81880109c20e49729e864c99c0ecdd0577ec642cd4be34",
-    "previewModeEncryptionKey": "d4344c8c8d986e25a80333a5e3041a70599f590542998b7cefee1659fddff8af"
+    "previewModeId": "b364f05cc93f25a92031b98806034864",
+    "previewModeSigningKey": "fc773917b54d705fcb8accdcb24f7ef2126d0d430ab479bbfea1555d6c165598",
+    "previewModeEncryptionKey": "cf8bd21185ea314de64f0ab509fcb35b1f978ada86ec8f94e6b74a8207f9976c"
   }
 }
