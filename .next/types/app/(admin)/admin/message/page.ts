@@ -1,4 +1,4 @@
-// File: C:\Users\mello\OneDrive\Документы\HOTEL_INFO_PROJECT\src\app\(admin)\admin\message\page.tsx
+// File: /mnt/d/projects/javascript/sulaymon-hotel/src/app/(admin)/admin/message/page.tsx
 import * as entry from '../../../../../../src/app/(admin)/admin/message/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

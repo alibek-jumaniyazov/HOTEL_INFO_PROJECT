@@ -1,4 +1,4 @@
-// File: C:\Users\mello\OneDrive\Документы\HOTEL_INFO_PROJECT\src\app\api\images\[...path]\route.ts
+// File: /mnt/d/projects/javascript/sulaymon-hotel/src/app/api/images/[...path]/route.ts
 import * as entry from '../../../../../../src/app/api/images/[...path]/route.js'
 import type { NextRequest } from 'next/server.js'
 
